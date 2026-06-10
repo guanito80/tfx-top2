@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>TFX PRO TOP2 V41 STABLE STORAGE</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+:root{
+--bg:#07111f;--bg2:#0d1b2f;--panel:#101b2b;--panel2:#14233a;--line:#2d3f5a;
+--text:#f4f7fb;--muted:#9fb0c8;--gold:#f0b429;--green:#40d781;--red:#ff6b6b;--mid:#ffd166;--blue:#5ea7ff;
+}
+*{box-sizing:border-box}
+body{
+font-family:Arial,Helvetica,sans-serif;
+padding:18px;
+background:radial-gradient(circle at top,#102640 0,#07111f 45%,#050914 100%);
+color:var(--text);
+margin:0;
+}
+.wrap{max-width:1500px;margin:auto}
+h1{
+font-size:30px;
+letter-spacing:.5px;
+margin:0;
+color:var(--gold);
+}
+textarea{
+width:100%;height:280px;background:#08111f;color:#eee;border:1px solid var(--line);
+padding:14px;border-radius:14px;font-size:13px;outline:none;box-shadow:0 0 0 1px rgba(240,180,41,.08) inset;
+}
+textarea:focus{border-color:var(--gold)}
+button{
+padding:12px 18px;margin:10px 6px 10px 0;border:0;border-radius:10px;
+background:linear-gradient(135deg,#f0b429,#ffe08a);color:#111;font-weight:800;cursor:pointer;
+box-shadow:0 8px 20px rgba(0,0,0,.25);
+}
+button.secondary{background:#253142;color:#fff;border:1px solid #3c4b63}
+pre{
+background:#0b1422;padding:14px;white-space:pre-wrap;overflow:auto;border-radius:14px;border:1px solid var(--line);
+color:#c9d6e8;
+}
+table{width:100%;border-collapse:separate;border-spacing:0;background:var(--panel);margin-top:12px;min-width:1200px;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+th,td{border-bottom:1px solid #263850;padding:9px;font-size:13px;text-align:left;vertical-align:top}
+th{background:#172842;color:#dbe7f8;text-transform:uppercase;font-size:11px;letter-spacing:.5px}
+tr:nth-child(even){background:#0f1b2d}
+tr:nth-child(1) td{background:rgba(240,180,41,.10)}
+.good{color:var(--green);font-weight:900}.mid{color:var(--mid);font-weight:900}.bad{color:var(--red);font-weight:900}
+.box{
+background:linear-gradient(180deg,rgba(20,35,58,.95),rgba(12,22,37,.95));
+border:1px solid var(--line);padding:14px;border-radius:16px;margin-top:12px;box-shadow:0 10px 25px rgba(0,0,0,.22);
+}
+.header{
+display:flex;align-items:center;justify-content:space-between;gap:14px;
+background:linear-gradient(135deg,#0f223b,#122d4c 55%,#1d2638);
+border:1px solid #334967;border-radius:18px;padding:18px;margin-bottom:14px;
+box-shadow:0 14px 35px rgba(0,0,0,.35);
+}
+.subtitle{color:var(--muted);font-weight:700;margin-top:4px}
+.versionBadge{background:rgba(240,180,41,.12);border:1px solid rgba(240,180,41,.55);color:var(--gold);padding:9px 12px;border-radius:999px;font-weight:900}
+.tablewrap{overflow:auto}
+.pickbox{display:grid;grid-template-columns:1.2fr 1.2fr .9fr;gap:12px}
+.pickcard{
+background:linear-gradient(180deg,#192b45,#0d192a);
+border:1px solid #39506e;border-radius:16px;padding:16px;min-height:145px;
+}
+.pickTitle{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.8px;font-weight:900}
+.trapBig{font-size:42px;font-weight:900;color:var(--gold);line-height:1}
+.dogName{font-size:21px;font-weight:900;margin:8px 0}
+.scoreBig{font-size:28px;font-weight:900}
+.bar{height:10px;background:#263850;border-radius:999px;overflow:hidden;margin-top:8px}
+.bar>span{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--green));border-radius:999px}
+.gapStrong{font-size:32px;font-weight:900;color:var(--green)}
+.gapPlayable{font-size:32px;font-weight:900;color:var(--mid)}
+.gapWeak{font-size:32px;font-weight:900;color:var(--red)}
+.statGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.stat{background:#0b1422;border:1px solid #263850;border-radius:14px;padding:12px}
+.stat b{font-size:22px;color:var(--gold)}
+@media(max-width:900px){.pickbox,.statGrid{grid-template-columns:1fr}.header{display:block}h1{font-size:25px}}
+</style>
+</head>
+<body>
+<div class="wrap"><div class="header"><div><h1>🏆 TFX PRO TOP2</h1><div class="subtitle">Professional Greyhound Analytics · Stable Storage + Backup</div></div><div class="versionBadge">V41 STABLE STORAGE</div></div>
+<div class="box"><b>💾 Archivio stabile:</b> i dati vengono salvati nel browser. Per sicurezza usa anche <b>BACKUP JSON</b>. Per evitare errori content:// carica questo file su Netlify oppure aprilo sempre dallo stesso file HTML salvato.</div><textarea id="txt" placeholder="Incolla qui la card RacingPost originale..."></textarea><br>
+<button onclick="analyze()">ANALIZZA CARD</button><button class="secondary" onclick="savePick()">SALVA PICK</button><button class="secondary" onclick="exportCSV()">SCARICA CSV</button><button class="secondary" onclick="clearAll()">PULISCI</button><button class="secondary" onclick="clearArchive()">RESET ARCHIVIO</button><button class="secondary" onclick="exportBackupJSON()">BACKUP JSON</button><button class="secondary" onclick="document.getElementById('backupInput').click()">IMPORTA BACKUP</button><input id="backupInput" type="file" accept=".json,application/json" style="display:none" onchange="importBackupJSON(event)">
+<div id="summary" class="box"></div><div id="pick" class="box"></div><div id="rank" class="tablewrap"></div><pre id="out"></pre><div id="archive" class="tablewrap"></div>
+</div>
+<script>
+let last=null;const STORE="tfx_top2_stable_archive_v41";
+function cleanName(name){return String(name||"").replace(/\s+\((M|W|R)\)\s*$/i,"").replace(/\bUpcoming\b/gi,"").replace(/\s+/g," ").trim()}
+function parseMeta(text){const trackList=["Sunderland","Romford","Monmore","Towcester","Sheffield","Newcastle","Hove","Nottingham","Doncaster","Kinsley","Oxford","Yarmouth","Crayford","Central Park","Harlow","Waterford","Pelaw Grange","Suffolk Downs","Swindon","Perry Barr"];const track=trackList.find(t=>new RegExp("\\b"+t.replace(/ /g,"\\s+")+"\\b","i").test(text))||"N/D";const time=(text.match(/\b\d{1,2}:\d{2}\b/)||["N/D"])[0];const race=(text.match(/Race\s+\d+\s+[A-Z0-9]+\s*-\s*\d{3,4}m\s+Flat/i)||text.match(/Race\s+\d+[^\n]*/i)||["Race N/D"])[0].replace(/\s+/g," ");const cls=(race.match(/\b(OR\d*|A\d+|D\d+|S\d+|HP)\b/i)||["",""])[1].toUpperCase();const dist=(race.match(/(\d{3,4})m/i)||["",""])[1];const post=(text.match(/POST\s+PICK:\s*([0-9\-]+)/i)||["","N/D"])[1];const date=(text.match(/\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{1,2}\b/i)||["N/D"])[0];return{track,time,race,cls,dist:dist?dist+"m":"",distNum:dist?parseInt(dist):0,post,date}}
+function linesOf(text){return text.replace(/\r/g,"\n").split("\n").map(x=>x.trim()).filter(Boolean)}function isDateLine(s){return /^\d{2}[A-Za-z]{3}\d{2}\b/.test(s)}function isBrtLine(s){return /^BRT:\s*/i.test(s)}
+function parseRun(line){const s=line.replace(/\s+/g," ").trim();const date=(s.match(/^(\d{2}[A-Za-z]{3}\d{2})/)||[])[1]||"";const dist=(s.match(/\b(\d{3,4})m\b/i)||[])[1]||"";const trap=(s.match(/\[([1-6])\]/)||[])[1]||"";const fin=(s.match(/\b(1st|2nd|3rd|4th|5th|6th|NR|T)\b/i)||[])[1]||"";const gradeMatch=s.match(/\b(OR\d*|A\d+|D\d+|S\d+|HP|T\d?)\b/i);const grade=gradeMatch?gradeMatch[1].toUpperCase():"";const nums=[...s.matchAll(/\b\d{1,2}\.\d{2}\b/g)].map(m=>parseFloat(m[0]));const cal=nums.filter(n=>n>=10).pop()||null;const split=nums.find(n=>n<10)||null;const official=!!fin&&fin!=="T"&&fin!=="NR"&&!!grade&&!/^T/i.test(grade)&&!!cal;const pos=fin==="1st"?1:fin==="2nd"?2:fin==="3rd"?3:fin==="4th"?4:fin==="5th"?5:fin==="6th"?6:null;return{date,dist:dist?parseInt(dist):null,trap,split,fin,grade,cal,official,pos,raw:line}}
+
+function isJunkLineV37(s){
+ return /^(card|form|stats|tips|cards|results|news|predictor|race status|date|track|dis|trp|split|fin|by|sp|grade|caltm)$/i.test(String(s||"").trim());
+}
+function isInterfaceNameV37(s){
+ return /RIEPILOGO|CONTROLLO|CLASSIFICA|PICK|LIGHT BET|Reader|Predictor|Results|News|Cards|ANALIZZA|PULISCI|ARCHIVIO|RECOVERY|Parser|CLEAN REBUILD|METRICS ENGINE/i.test(String(s||""));
+}
+function looksPedigreeV37(s){
+ return /\b(bk|bd|be|bkw|wbk|wbe|dkbd|bebd|f)\b\s+\b(d|b)\b/i.test(String(s||"")) || /\b[A-Z][a-z]{2}\d{2}\b/.test(String(s||""));
+}
+function validDogNameV37(s){
+ s=cleanName(s);
+ if(!s || isInterfaceNameV37(s) || isDateLine(s) || isBrtLine(s) || looksPedigreeV37(s)) return false;
+ if(s.length<3 || s.length>45) return false;
+ if(!/^[A-Z]/.test(s)) return false;
+ return true;
+}
+function findDogNameBeforeV37(lines, brtIndex){
+ for(let j=brtIndex-1;j>=Math.max(0,brtIndex-8);j--){
+   const cand=cleanName(lines[j]);
+   if(validDogNameV37(cand)) return cand;
+ }
+ return "";
+}
+
+function parseDogs(text){
+ const rawLines=text.replace(/\r/g,"\n").split("\n").map(x=>x.trim()).filter(Boolean);
+ const lines=rawLines.filter(x=>!isJunkLineV37(x));
+ const dogs=[];
+ for(let i=0;i<lines.length;i++){
+   if(!isBrtLine(lines[i])) continue;
+   const name=findDogNameBeforeV37(lines,i);
+   if(!validDogNameV37(name)) continue;
+   const brtLine=lines[i];
+   const brt=(brtLine.match(/BRT:\s*([0-9.]+)/i)||[])[1]||"";
+   const trainer=(brtLine.match(/Tnr:\s*(.+)$/i)||[])[1]||"";
+   const runs=[];
+   for(let j=i+1;j<lines.length;j++){
+     if(isBrtLine(lines[j])) break;
+     if(/^(Cards|Results|News)$/i.test(lines[j])) break;
+     if(isDateLine(lines[j])) runs.push(parseRun(lines[j]));
+   }
+   dogs.push({trap:dogs.length+1,name,brt:brt?parseFloat(brt):null,trainer,runs});
+   if(dogs.length>=6) break;
+ }
+ return dogs;
+}
+
+function calcMetrics(dog,meta){const official=dog.runs.filter(r=>r.official).slice(0,5);const recent5=official.slice(0,5);const recent3=official.slice(0,3);const top2_5=recent5.length?Math.round(recent5.filter(r=>r.pos&&r.pos<=2).length/recent5.length*100):0;const top2_3=recent3.length?Math.round(recent3.filter(r=>r.pos&&r.pos<=2).length/recent3.length*100):0;const avgPos=recent5.length?recent5.reduce((a,r)=>a+r.pos,0)/recent5.length:6;const posScore=Math.round(Math.max(0,100-((avgPos-1)*16)));const times=recent5.map(r=>r.cal).filter(Boolean);const bestTime=times.length?Math.min(...times):null;const avgTime=times.length?times.reduce((a,b)=>a+b,0)/times.length:null;const sameDist=recent5.filter(r=>meta.distNum&&r.dist&&Math.abs(r.dist-meta.distNum)<=40).length;const distScore=recent5.length?Math.round(sameDist/recent5.length*100):50;const sameClass=recent5.filter(r=>r.grade===meta.cls).length;const classScore=Math.min(100,40+sameClass*12);const brtScore=dog.brt?Math.max(40,Math.min(100,Math.round(100-(dog.brt-(meta.distNum<300?15.8:24.2))*18))):60;const splits=recent5.map(r=>r.split).filter(Boolean);const splitScore=splits.length?Math.max(45,Math.min(100,Math.round(100-((splits.reduce((a,b)=>a+b,0)/splits.length)-(meta.distNum<300?2.8:4.0))*20))):55;const postBonus=meta.post.split("-").includes(String(dog.trap))?3:0;const raw=Math.round(top2_5*.40+top2_3*.25+posScore*.20+brtScore*.05+distScore*.05+classScore*.03+splitScore*.02+postBonus);const confidence=Math.max(25,Math.min(95,Math.round(42+official.length*7+(sameDist>=3?8:0)+(dog.trainer?5:0))));return{official:official.length,top2_5,top2_3,avgPos:avgPos.toFixed(2),posScore,bestTime,avgTime:avgTime?avgTime.toFixed(2):"-",distScore,classScore,brtScore,splitScore,postBonus,raw,confidence}}
+function label(score,conf,official,top25){if(official<4||top25<40||conf<65)return"NO BET";if(score>=76&&conf>=70)return"BET";if(score>=66&&conf>=60)return"LIGHT";return"NO BET"}function css(score){return score>=76?"good":score>=66?"mid":"bad"}
+function analyze(){const text=document.getElementById("txt").value;const meta=parseMeta(text);const dogs=parseDogs(text).map(d=>({...d,m:calcMetrics(d,meta)}));const ranked=[...dogs].sort((a,b)=>b.m.raw-a.m.raw||b.m.confidence-a.m.confidence);const trainerOk=dogs.filter(d=>d.trainer).length;const brtOk=dogs.filter(d=>d.brt).length;const officialTot=dogs.reduce((a,d)=>a+d.m.official,0);const quality=Math.max(0,100-(dogs.length!==6?25:0)-((6-trainerOk)*5)-((6-brtOk)*5)-(officialTot<20?15:0));const pick=ranked[0],second=ranked[1],third=ranked[2];const gap=third?pick.m.raw-third.m.raw:0;let forza='DEBOLE';if(gap>=10)forza='FORTE';else if(gap>=6)forza='GIOCABILE';last={meta,dogs,ranked,pick,second,third,gap,forza,quality};document.getElementById("summary").innerHTML=`<b>Card:</b> ${meta.track} - ${meta.date} - ${meta.time}<br><b>Gara:</b> ${meta.race}<br><b>Post Pick:</b> ${meta.post}<br><b>Levrieri:</b> ${dogs.length}/6 · <b>Trainer:</b> ${trainerOk}/6 · <b>BRT:</b> ${brtOk}/6 · <b>Ufficiali:</b> ${officialTot} · <b>Parser Quality:</b> ${quality}/100`;document.getElementById("pick").innerHTML=pick?`<div class="pickbox">
+<div class="pickcard">
+<div class="pickTitle">🥇 Pick #1</div>
+<div class="trapBig">T${pick.trap}</div>
+<div class="dogName">${pick.name}</div>
+<div class="scoreBig ${css(pick.m.raw)}">${pick.m.raw}%</div>
+<div class="bar"><span style="width:${pick.m.raw}%"></span></div>
+</div>
+<div class="pickcard">
+<div class="pickTitle">🥈 Pick #2</div>
+<div class="trapBig">T${second.trap}</div>
+<div class="dogName">${second.name}</div>
+<div class="scoreBig ${css(second.m.raw)}">${second.m.raw}%</div>
+<div class="bar"><span style="width:${second.m.raw}%"></span></div>
+</div>
+<div class="pickcard">
+<div class="pickTitle">🔥 Top2 Gap</div>
+<div class="${forza==='FORTE'?'gapStrong':forza==='GIOCABILE'?'gapPlayable':'gapWeak'}">${gap}</div>
+<div class="dogName">${forza}</div>
+<div>Confidence: <b>${pick.m.confidence}%</b></div>
+<div style="margin-top:10px">${label(pick.m.raw,pick.m.confidence,pick.m.official,pick.m.top2_5)}</div>
+</div>
+</div>`:"";let table='<table><thead><tr><th>Rank</th><th>Trap</th><th>Levriero</th><th>Trainer</th><th>BRT</th><th>Uff.</th><th>Top2 5</th><th>Top2 3</th><th>Avg Pos</th><th>Best</th><th>Avg Time</th><th>Distanza</th><th>Classe</th><th>BRT score</th><th>Score</th><th>Conf</th><th>Esito</th></tr></thead><tbody>';ranked.forEach((d,i)=>{const medal=i===0?"🥇":i===1?"🥈":i===2?"🥉":(i+1);table+=`<tr><td>${medal}</td><td>${d.trap}</td><td>${d.name}</td><td>${d.trainer}</td><td>${d.brt??"-"}</td><td>${d.m.official}</td><td>${d.m.top2_5}%</td><td>${d.m.top2_3}%</td><td>${d.m.avgPos}</td><td>${d.m.bestTime??"-"}</td><td>${d.m.avgTime}</td><td>${d.m.distScore}</td><td>${d.m.classScore}</td><td>${d.m.brtScore}</td><td class="${css(d.m.raw)}">${d.m.raw}%</td><td>${d.m.confidence}%</td><td>${label(d.m.raw,d.m.confidence,d.m.official,d.m.top2_5)}</td></tr>`});table+='</tbody></table>';document.getElementById("rank").innerHTML=table;let out=[];dogs.forEach(d=>{out.push(`TRAP ${d.trap} - ${d.name}`);out.push(`Trainer: ${d.trainer} | BRT: ${d.brt}`);out.push(`Ufficiali: ${d.m.official} | Top2 ult.5: ${d.m.top2_5}% | Top2 ult.3: ${d.m.top2_3}% | AvgPos: ${d.m.avgPos}`);d.runs.slice(0,5).forEach(r=>out.push(`  ${r.date} ${r.dist||"-"}m [${r.trap||"-"}] ${r.fin||"-"} ${r.grade||"-"} ${r.cal||"-"} ${r.official?"OFF":"TRIAL/NO"}`));out.push("")});document.getElementById("out").textContent=out.join("\n");renderArchive()}
+function rows(){try{return JSON.parse(localStorage.getItem(STORE)||"[]")}catch(e){return[]}}function setRows(r){localStorage.setItem(STORE,JSON.stringify(r));renderArchive()}function savePick(){if(!last||!last.pick){alert("Prima analizza una card");return}const r=rows();r.push({id:r.length+1,salvato:new Date().toLocaleString(),track:last.meta.track,data:last.meta.date,ora:last.meta.time,gara:last.meta.race,classe:last.meta.cls,distanza:last.meta.dist,pick:`T${last.pick.trap} ${last.pick.name}`,seconda:`T${last.second.trap} ${last.second.name}`,score:last.pick.m.raw,confidence:last.pick.m.confidence,parser_quality:last.quality,gap:last.gap,forza:last.forza,arrivo:"",esito:"PENDING"});setRows(r)}function updateArrival(id,val){const r=rows();const row=r.find(x=>x.id==id);if(!row)return;row.arrivo=val;const nums=String(val).split(/[-,\s]+/).map(Number).filter(Boolean);const pickTrap=Number(String(row.pick).match(/T(\d)/)?.[1]||0);row.esito=nums.length?(nums.slice(0,2).includes(pickTrap)?"WIN":"LOSE"):"PENDING";setRows(r)}function renderArchive(){const r=rows();if(!r.length){document.getElementById("archive").innerHTML='<div class="box">Archivio vuoto.</div>';return}const done=r.filter(x=>x.esito!=="PENDING"),win=done.filter(x=>x.esito==="WIN").length,wr=done.length?((win/done.length)*100).toFixed(1):"0.0";let h=`<div class="box"><div class="statGrid"><div class="stat">Salvate<br><b>${r.length}</b></div><div class="stat">Concluse<br><b>${done.length}</b></div><div class="stat">WIN<br><b>${win}</b></div><div class="stat">WR<br><b>${wr}%</b></div></div></div><table><thead><tr><th>ID</th><th>Track/Data/Ora</th><th>Gara</th><th>Pick</th><th>2ª</th><th>Score</th><th>Conf</th><th>Parser</th><th>Gap</th><th>Forza</th><th>Arrivo</th><th>Esito</th></tr></thead><tbody>`;r.forEach(x=>{h+=`<tr><td>${x.id}</td><td>${x.track}<br>${x.data}<br>${x.ora}</td><td>${x.gara}<br>${x.classe} ${x.distanza}</td><td>${x.pick}</td><td>${x.seconda}</td><td>${x.score}%</td><td>${x.confidence}%</td><td>${x.parser_quality}</td><td>${x.gap??""}</td><td>${x.forza??""}</td><td><input value="${x.arrivo}" onchange="updateArrival(${x.id},this.value)" placeholder="5-2-1"></td><td class="${x.esito==='WIN'?'good':x.esito==='LOSE'?'bad':'mid'}">${x.esito}</td></tr>`});h+='</tbody></table>';document.getElementById("archive").innerHTML=h}function exportCSV(){const r=rows();if(!r.length){alert("Archivio vuoto");return}const keys=Object.keys(r[0]);const csv=[keys.join(";")].concat(r.map(row=>keys.map(k=>`"${String(row[k]??"").replaceAll('"','""')}"`).join(";"))).join("\n");const blob=new Blob([csv],{type:"text/csv;charset=utf-8"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="TFX_TOP2_V41.csv";a.click()}
+function exportBackupJSON(){
+ const r=rows();
+ const payload={app:"TFX_PRO_TOP2",version:"V41_STABLE_STORAGE",created_at:new Date().toISOString(),archive:r};
+ const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json;charset=utf-8"});
+ const a=document.createElement("a");
+ a.href=URL.createObjectURL(blob);
+ a.download="TFX_TOP2_BACKUP_V41.json";
+ a.click();
+}
+function importBackupJSON(ev){
+ const file=ev.target.files&&ev.target.files[0];
+ if(!file)return;
+ const reader=new FileReader();
+ reader.onload=function(){
+  try{
+   const data=JSON.parse(reader.result);
+   const archive=Array.isArray(data)?data:(data.archive||[]);
+   if(!Array.isArray(archive))throw new Error("Formato backup non valido");
+   const current=rows();
+   const merged=[...current];
+   archive.forEach(item=>{
+    const exists=merged.some(x=>x.track===item.track&&x.ora===item.ora&&x.gara===item.gara&&x.pick===item.pick&&x.salvato===item.salvato);
+    if(!exists)merged.push(item);
+   });
+   merged.forEach((x,i)=>x.id=i+1);
+   setRows(merged);
+   alert("Backup importato. Gare totali: "+merged.length);
+  }catch(e){alert("Backup non valido: "+e.message);}
+ };
+ reader.readAsText(file);
+ ev.target.value="";
+}
+
+function clearArchive(){if(confirm("Cancellare archivio?"))setRows([])}function clearAll(){document.getElementById("txt").value="";document.getElementById("summary").innerHTML="";document.getElementById("pick").innerHTML="";document.getElementById("rank").innerHTML="";document.getElementById("out").textContent=""}renderArchive();
+</script>
+</body>
+</html>
