@@ -65,10 +65,12 @@
         const statusOutput = document.getElementById('statusOutput');
         const aiOutput = document.getElementById('aiOutput');
 
+        // Recupera la chiave se salvata precedentemente
         if (localStorage.getItem('gemini_api_key')) {
             apiKeyInput.value = localStorage.getItem('gemini_api_key');
         }
 
+        // Salva la chiave ad ogni inserimento
         apiKeyInput.addEventListener('input', () => {
             localStorage.setItem('gemini_api_key', apiKeyInput.value);
         });
@@ -78,23 +80,23 @@
             const rawData = rawInput.value.trim();
 
             if (!apiKey) {
-                alert('Manca la chiave API in alto a destra!');
+                alert('Manca la chiave API in alto!');
                 return;
             }
             if (!rawData) {
-                alert('Incolla i dati della corsa nel box di sinistra!');
+                alert('Incolla i dati della corsa a sinistra!');
                 return;
             }
 
             analyzeBtn.disabled = true;
             statusOutput.textContent = 'Calcolo in corso...';
-            aiOutput.textContent = 'Analisi in corso...';
+            aiOutput.textContent = 'Analisi balistica e tattica in corso...';
 
-            const promptTesto = "Sei un analista esperto di corse di levrieri UK. Analizza la geometria delle traiettorie, gli split time e i declassamenti delle categorie. Mostra una tabella HTML con le colonne Trap, Levriero, Punteggio Lancio, % Probabilità Top 2 e infine dai un verdetto finale con la giocata consigliata e l'accoppiata. Genera solo tag HTML puliti per l'output. Ecco la corsa:\n" + rawData;
+            const promptTesto = "Sei un analista esperto di corse di levrieri UK. Analizza la geometria delle traiettorie, gli split time e i declassamenti delle categorie per determinare quale cane finirà nelle prime 2 posizioni (Filtro Top 2). Mostra una tabella HTML con le colonne Trap, Levriero, Punteggio Lancio, % Probabilità Top 2 e infine dai un verdetto finale con la giocata consigliata e l'accoppiata. Genera solo tag HTML puliti per l'output. Ecco la corsa:\n" + rawData;
 
             try {
-                // Endpoint aggiornato con la dicitura esatta del modello richiesto da v1
-                const url = 'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash-latest:generateContent?key=' + apiKey;
+                // Endpoint universale v1beta accoppiato a gemini-1.5-flash standard
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
                 
                 const response = await fetch(url, {
                     method: 'POST',
@@ -108,14 +110,15 @@
 
                 if (data.candidates && data.candidates[0].content.parts[0].text) {
                     let risultato = data.candidates[0].content.parts[0].text;
+                    // Rimuove eventuali blocchi di codice markdown se l'AI risponde con ```html
                     risultato = risultato.replace(/```html/g, '').replace(/```/g, '');
                     aiOutput.innerHTML = risultato;
                     statusOutput.textContent = 'Completato!';
                 } else if (data.error) {
-                    aiOutput.textContent = 'Errore da Google: ' + data.error.message;
+                    aiOutput.textContent = 'Errore da Google: ' + data.error.message + ' (Codice: ' + data.error.code + ')';
                     statusOutput.textContent = 'Errore.';
                 } else {
-                    aiOutput.textContent = 'Risposta non valida dal server.';
+                    aiOutput.textContent = 'Risposta non strutturata dal server. Controlla la console.';
                     statusOutput.textContent = 'Errore.';
                 }
             } catch (err) {
