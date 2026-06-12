@@ -32,6 +32,13 @@
         .output-box th { background-color: var(--border-color); color: var(--accent-blue); padding: 10px; text-align: left; }
         .output-box td { padding: 10px; border-bottom: 1px solid var(--border-color); }
     </style>
+    <script type="importmap">
+      {
+        "imports": {
+          "@google/generative-ai": "https://esm.run/@google/generative-ai"
+        }
+      }
+    </script>
 </head>
 <body>
 
@@ -58,7 +65,9 @@
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        import { GoogleGenAI } from "@google/generative-ai";
+
         const apiKeyInput = document.getElementById('apiKey');
         const analyzeBtn = document.getElementById('analyzeBtn');
         const rawInput = document.getElementById('rawInput');
@@ -88,40 +97,30 @@
 
             analyzeBtn.disabled = true;
             statusOutput.textContent = 'Calcolo in corso...';
-            aiOutput.textContent = 'L\'intelligenza artificiale sta analizzando la card di Racing Post...';
+            aiOutput.textContent = 'L\'interfaccia sta interrogando i nodi dell\'intelligenza artificiale...';
 
-            const promptTesto = "Sei un analista esperto di corse di levrieri UK. Usa uno stile crudo, energico e analitico da romanzo noir. Analizza la geometria delle traiettorie, gli split time e i declassamenti delle categorie. Mostra una tabella HTML con le colonne Trap, Levriero, Punteggio Lancio, % Probabilità Top 2 e infine dai un verdetto finale con la giocata consigliata e l'accoppiata. Genera solo tag HTML puliti per l'output. Ecco la corsa:\n" + rawData;
+            const promptTesto = "Sei un analista esperto di corse di levrieri UK. Lo stile editoriale deve essere quello dei grandi autori di noir nordici, prendendo come esempio Jo Nesbo. I capitoli devono avere una lunghezza tra le 2400 e le 2500 parole. Nelle conversazioni, vai a capo ma non lasciare righe vuote. Salva questa regola per tutto il romanzo. Analizza la geometria delle traiettorie, gli split time e i declassamenti delle categorie per determinare quale cane finirà nelle prime 2 posizioni (Filtro Top 2). Mostra una tabella HTML con le colonne Trap, Levriero, Punteggio Lancio, % Probabilità Top 2 e infine dai un verdetto finale con la giocata consigliata e l'accoppiata. Genera solo tag HTML puliti per l'output. Ecco la corsa:\n" + rawData;
 
             try {
-                // CORREZIONE: Endpoint v1 ufficiale e pulito
-                const url = 'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=' + apiKey;
-                
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [{ parts: [{ text: promptTesto }] }]
-                    })
+                // Inizializzazione corretta tramite SDK ufficiale per superare le restrizioni della piattaforma
+                const ai = new GoogleGenAI({ apiKey: apiKey });
+                const response = await ai.models.generateContent({
+                    model: 'gemini-1.5-flash',
+                    contents: promptTesto,
                 });
 
-                const data = await response.json();
-
-                if (data.candidates && data.candidates[0].content.parts[0].text) {
-                    let risultato = data.candidates[0].content.parts[0].text;
-                    // Pulizia da eventuali blocchi markdown racchiusi dall'AI
+                if (response.text) {
+                    let risultato = response.text;
                     risultato = risultato.replace(/```html/g, '').replace(/```/g, '');
                     aiOutput.innerHTML = risultato;
                     statusOutput.textContent = 'Completato!';
-                } else if (data.error) {
-                    aiOutput.textContent = 'Errore da Google: ' + data.error.message;
-                    statusOutput.textContent = 'Errore.';
                 } else {
-                    aiOutput.textContent = 'Risposta non valida dal server.';
+                    aiOutput.textContent = 'Risposta non strutturata ricevuta dai server.';
                     statusOutput.textContent = 'Errore.';
                 }
             } catch (err) {
                 console.error(err);
-                aiOutput.textContent = 'Errore di connessione: ' + err.message;
+                aiOutput.textContent = 'Errore durante la chiamata API di Google:\n' + err.message + '\n\nAssicurati che sulla dashboard di Google AI Studio non ci siano avvisi di fatturazione o blocchi regionali pendenti sulla chiave.';
                 statusOutput.textContent = 'Errore.';
             } finally {
                 analyzeBtn.disabled = false;
