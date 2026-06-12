@@ -1,1213 +1,366 @@
-<!DOCTYPE html>
+import os
+
+# Definiamo il contenuto dell'applicazione HTML con logica di analisi e connessione a Gemini API
+html_content = """<!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TFX PRO TOP2 V71 GEOMETRY</title>
-  <style>
-/* TFX PRO TOP2 V71 GEOMETRY - Dark Minimal */
-:root {
-  --bg: #0f0f0f;
-  --surface: #1a1a1a;
-  --surface2: #222222;
-  --border: #333333;
-  --text: #f0f0f0;
-  --muted: #888888;
-  --green: #22c55e;
-  --yellow: #eab308;
-  --red: #ef4444;
-  --blue: #3b82f6;
-  --accent: #22c55e;
-  --radius: 12px;
-  --shadow: 0 4px 20px rgba(0,0,0,0.4);
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  font-size: 14px;
-  line-height: 1.5;
-  min-height: 100vh;
-}
-.topbar {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  box-shadow: var(--shadow);
-}
-.topbar-title { font-weight: 800; font-size: 16px; }
-.version-badge {
-  font-size: 11px;
-  background: rgba(34,197,94,0.15);
-  color: var(--green);
-  padding: 3px 8px;
-  border-radius: 99px;
-  border: 1px solid rgba(34,197,94,0.4);
-  margin-left: 8px;
-}
-.menu-btn {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  color: var(--text);
-  font-size: 20px;
-  padding: 6px 10px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-.overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.6);
-  z-index: 200;
-}
-.overlay.open { display: block; }
-.sidenav {
-  position: fixed;
-  left: -280px;
-  top: 0;
-  width: 270px;
-  height: 100vh;
-  background: var(--surface);
-  border-right: 1px solid var(--border);
-  z-index: 300;
-  padding: 20px 16px;
-  transition: left 0.25s ease;
-  overflow-y: auto;
-}
-.sidenav.open { left: 0; }
-.nav-brand { font-size: 18px; font-weight: 800; }
-.nav-sub { font-size: 12px; color: var(--muted); margin-bottom: 20px; }
-.nav-btn {
-  display: block;
-  width: 100%;
-  text-align: left;
-  padding: 10px 12px;
-  margin: 4px 0;
-  border-radius: 8px;
-  background: transparent;
-  border: 1px solid transparent;
-  color: var(--text);
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-.nav-btn:hover, .nav-btn.active {
-  background: var(--surface2);
-  border-color: var(--border);
-}
-.nav-divider { border: none; border-top: 1px solid var(--border); margin: 12px 0; }
-.main {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 16px;
-}
-.section { display: none; }
-.section.active { display: block; }
-.hidden { display: none !important; }
-.card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 16px;
-  margin-bottom: 12px;
-  box-shadow: var(--shadow);
-}
-.intro-card {
-  background: linear-gradient(135deg, #1a2a1a, #1a1a1a);
-  border-color: rgba(34,197,94,0.3);
-}
-.intro-card p { color: var(--muted); font-size: 13px; }
-.intro-card strong { color: var(--green); }
-textarea {
-  width: 100%;
-  height: 200px;
-  background: var(--bg);
-  color: var(--text);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 12px;
-  font-size: 12px;
-  font-family: monospace;
-  resize: vertical;
-  outline: none;
-}
-textarea:focus { border-color: var(--green); }
-.action-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-.btn-primary {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 8px;
-  background: var(--green);
-  color: #000;
-  font-weight: 800;
-  font-size: 14px;
-  cursor: pointer;
-}
-.btn-primary:hover { filter: brightness(1.1); }
-.btn-secondary {
-  padding: 10px 16px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: var(--surface2);
-  color: var(--text);
-  font-weight: 600;
-  font-size: 13px;
-  cursor: pointer;
-}
-.btn-danger {
-  padding: 10px 16px;
-  border: 1px solid var(--red);
-  border-radius: 8px;
-  background: rgba(239,68,68,0.1);
-  color: var(--red);
-  font-weight: 700;
-  font-size: 13px;
-  cursor: pointer;
-}
-.btn-expand {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: var(--surface2);
-  color: var(--muted);
-  font-size: 13px;
-  cursor: pointer;
-  text-align: center;
-}
-.filters-card {
-  border-color: var(--red);
-  background: rgba(239,68,68,0.05);
-}
-.filters-card.warning {
-  border-color: var(--yellow);
-  background: rgba(234,179,8,0.05);
-}
-.filters-card.pass {
-  border-color: var(--green);
-  background: rgba(34,197,94,0.05);
-}
-.filter-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 4px 0;
-  font-size: 13px;
-}
-.filter-icon { font-size: 16px; }
-.picks-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-.pick-card {
-  text-align: center;
-  padding: 20px 12px;
-}
-.pick-label {
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: var(--muted);
-  font-weight: 700;
-}
-.pick-trap {
-  font-size: 36px;
-  font-weight: 900;
-  color: var(--green);
-  line-height: 1.1;
-}
-.pick-trap.second { color: var(--blue); }
-.pick-name {
-  font-size: 14px;
-  font-weight: 700;
-  margin: 6px 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.pick-score { font-size: 24px; font-weight: 900; }
-.score-green { color: var(--green); }
-.score-yellow { color: var(--yellow); }
-.score-red { color: var(--red); }
-.verdict-card { display: flex; flex-direction: column; align-items: center; justify-content: center; }
-.verdict-label { font-size: 28px; font-weight: 900; margin: 8px 0; }
-.verdict-bet { color: var(--green); }
-.verdict-light { color: var(--yellow); }
-.verdict-nobet { color: var(--red); }
-.verdict-reason { font-size: 12px; color: var(--muted); text-align: center; }
-.verdict-gap { font-size: 13px; margin-top: 6px; }
-.bar-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 6px 0;
-}
-.bar-trap { width: 30px; font-weight: 800; font-size: 13px; color: var(--muted); }
-.bar-name {
-  width: 120px;
-  font-size: 12px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.bar-track {
-  flex: 1;
-  height: 24px;
-  background: var(--bg);
-  border-radius: 6px;
-  overflow: hidden;
-  position: relative;
-}
-.bar-fill {
-  height: 100%;
-  border-radius: 6px;
-  transition: width 0.4s ease;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding-right: 8px;
-  font-size: 11px;
-  font-weight: 800;
-  color: #000;
-}
-.bar-fill.green { background: var(--green); }
-.bar-fill.yellow { background: var(--yellow); }
-.bar-fill.red { background: var(--red); }
-.bar-verdict { width: 60px; text-align: right; font-size: 11px; font-weight: 700; }
-.details-content { margin-top: 12px; }
-.dog-detail {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 12px;
-  margin-bottom: 8px;
-}
-.dog-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-}
-.dog-title { font-weight: 800; font-size: 14px; }
-.dog-metrics {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 8px;
-}
-.metric {
-  background: var(--surface);
-  border-radius: 6px;
-  padding: 8px;
-  text-align: center;
-}
-.metric-label { font-size: 10px; color: var(--muted); text-transform: uppercase; }
-.metric-value { font-size: 16px; font-weight: 800; }
-.dog-runs {
-  margin-top: 8px;
-  font-size: 11px;
-  color: var(--muted);
-  font-family: monospace;
-  white-space: pre-wrap;
-}
-.archive-stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-  gap: 8px;
-  margin-bottom: 16px;
-}
-.stat-box {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 12px;
-  text-align: center;
-}
-.stat-label { font-size: 10px; color: var(--muted); text-transform: uppercase; }
-.stat-value { font-size: 20px; font-weight: 800; color: var(--green); }
-.stat-value.negative { color: var(--red); }
-.table-wrap { overflow-x: auto; }
-.table-wrap table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 12px;
-  min-width: 700px;
-}
-.table-wrap th, .table-wrap td {
-  padding: 8px 6px;
-  border-bottom: 1px solid var(--border);
-  text-align: left;
-}
-.table-wrap th {
-  background: var(--surface2);
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--muted);
-}
-.table-wrap tr:hover { background: var(--surface2); }
-.table-wrap input {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  color: var(--text);
-  padding: 4px 6px;
-  width: 70px;
-  font-size: 12px;
-}
-.win { color: var(--green); font-weight: 700; }
-.lose { color: var(--red); font-weight: 700; }
-.pending { color: var(--yellow); }
-.mini-btn {
-  padding: 4px 8px;
-  border-radius: 6px;
-  border: 1px solid var(--border);
-  background: var(--surface2);
-  color: var(--text);
-  font-size: 11px;
-  cursor: pointer;
-  margin: 2px;
-}
-.mini-btn.danger { border-color: var(--red); color: var(--red); }
-.section-title { font-size: 18px; font-weight: 800; margin-bottom: 16px; }
-.settings-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-.setting-item label {
-  display: block;
-  font-size: 11px;
-  color: var(--muted);
-  text-transform: uppercase;
-  margin-bottom: 4px;
-  font-weight: 700;
-}
-.setting-item input, .setting-item select {
-  width: 100%;
-  padding: 8px;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  color: var(--text);
-  font-size: 14px;
-}
-.stats-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-top: 12px;
-}
-.stats-card {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 14px;
-}
-.stats-card h3 { font-size: 13px; color: var(--muted); margin-bottom: 8px; }
-.stats-row { display: flex; justify-content: space-between; padding: 3px 0; font-size: 13px; }
-.stats-row b { color: var(--green); }
-@media (max-width: 700px) {
-  .picks-grid { grid-template-columns: 1fr; }
-  .settings-grid { grid-template-columns: 1fr; }
-  .stats-grid { grid-template-columns: 1fr; }
-  .bar-name { width: 80px; }
-  .pick-trap { font-size: 28px; }
-}
-@media print {
-  .topbar,.sidenav,.overlay,#sec-analysis,#sec-settings,button,textarea{display:none!important}
-  body{background:#fff;color:#111}
-  .card,.stats-card,.stat-box{box-shadow:none;border:1px solid #999;background:#fff;color:#111}
-  .main{max-width:none}
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE DOG MATRIX - AI Greyhound Predictor</title>
+    <style>
+        :root {
+            --bg-dark: #0a0f1d;
+            --panel-dark: #121829;
+            --accent-green: #00ff66;
+            --accent-red: #ff3333;
+            --accent-blue: #00e5ff;
+            --text-main: #f0f4f8;
+            --text-muted: #8fa0dd;
+            --border-color: #202b47;
+        }
 
-</style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: var(--panel-dark);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 25px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 {
+            color: var(--accent-green);
+            font-size: 24px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h1 span {
+            color: var(--text-main);
+        }
+
+        .config-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .config-box input {
+            background-color: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            width: 280px;
+            transition: all 0.3s;
+        }
+
+        .config-box input:focus {
+            outline: none;
+            border-color: var(--accent-green);
+            box-shadow: 0 0 10px rgba(0, 255, 102, 0.2);
+        }
+
+        .main-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            flex: 1;
+        }
+
+        @media (max-width: 1024px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background-color: var(--panel-dark);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+        }
+
+        .panel-title {
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            color: var(--accent-blue);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        textarea {
+            width: 100%;
+            flex: 1;
+            min-height: 400px;
+            background-color: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            resize: none;
+            line-height: 1.5;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+
+        .action-bar {
+            margin-top: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        button {
+            background: linear-gradient(135deg, #00ff66 0%, #00b347 100%);
+            color: #000;
+            border: none;
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 255, 102, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 255, 102, 0.5);
+        }
+
+        button:disabled {
+            background: #202b47;
+            color: #556688;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .output-box {
+            width: 100%;
+            flex: 1;
+            background-color: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            overflow-y: auto;
+            font-size: 14px;
+            line-height: 1.6;
+            min-height: 400px;
+            white-space: pre-wrap;
+        }
+
+        /* Stili per formattazione output AI */
+        .output-box h3 {
+            color: var(--accent-green);
+            margin-top: 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid var(--accent-green);
+            padding-left: 8px;
+            font-size: 16px;
+            text-transform: uppercase;
+        }
+        
+        .output-box table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background-color: var(--panel-dark);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .output-box th {
+            background-color: var(--border-color);
+            color: var(--accent-blue);
+            text-align: left;
+            padding: 10px;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .output-box td {
+            padding: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .status-message {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .status-loading {
+            color: var(--accent-blue);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+    </style>
 </head>
 <body>
-  <div class="topbar">
-    <button class="menu-btn" onclick="toggleNav()">☰</button>
-    <div class="topbar-title">TFX PRO TOP2 <span class="version-badge">V71</span></div>
-  </div>
 
-  <div id="overlay" class="overlay" onclick="toggleNav()"></div>
-
-  <nav id="sidenav" class="sidenav">
-    <div class="nav-brand">🏆 TFX PRO TOP2</div>
-    <div class="nav-sub">V71 · Split Geometry Engine</div>
-    <button class="nav-btn active" onclick="showSection('analysis')">🔍 Analisi</button>
-    <button class="nav-btn" onclick="showSection('archive')">📁 Archivio</button>
-    <button class="nav-btn" onclick="showSection('stats')">📊 Statistiche</button>
-    <button class="nav-btn" onclick="showSection('settings')">⚙️ Impostazioni</button>
-    <hr class="nav-divider" />
-    <button class="nav-btn" onclick="window.print()">📄 Stampa/PDF</button>
-    <button class="nav-btn" onclick="exportCSV()">⬇️ CSV</button>
-    <button class="nav-btn" onclick="exportBackup()">💽 Backup JSON</button>
-    <button class="nav-btn" onclick="document.getElementById('backupInput').click()">📤 Importa Backup</button>
-  </nav>
-
-  <main class="main">
-    <section id="sec-analysis" class="section active">
-      <div class="card intro-card">
-        <h2>🏆 TFX PRO TOP2 V71 GEOMETRY</h2>
-        <p><strong>3 Pilastri + Filtro preventivo.</strong> Modello semplice per trovare il levriero più affidabile da Top2, non il vincente secco.</p>
-      </div>
-
-      <div class="card">
-        <textarea id="cardInput" placeholder="Incolla qui la card RacingPost originale..."></textarea>
-        <div class="action-row">
-          <button class="btn-primary" onclick="analyzeCard()">ANALIZZA CARD</button>
-          <button class="btn-secondary" onclick="savePick()">SALVA PICK</button>
-          <button class="btn-secondary" onclick="clearInput()">PULISCI</button>
+    <header>
+        <h1>THE DOG MATRIX <span>// AI PREDICTOR</span></h1>
+        <div class="config-box">
+            <label for="apiKey" style="font-size: 12px; color: var(--text-muted); text-transform: uppercase;">Gemini API Key:</label>
+            <input type="password" id="apiKey" placeholder="Incolla la tua API Key di Google Gemini..." />
         </div>
-      </div>
+    </header>
 
-      <div id="filtersAlert" class="card filters-card hidden"></div>
-
-      <div id="pickResult" class="hidden">
-        <div class="picks-grid">
-          <div id="pick1Card" class="card pick-card"></div>
-          <div id="pick2Card" class="card pick-card"></div>
-          <div id="verdictCard" class="card pick-card verdict-card"></div>
+    <div class="main-container">
+        <div class="panel">
+            <div class="panel-title">
+                <span>Dati Grezzi Racing Post / Predictor</span>
+                <span style="color: var(--text-muted); font-size: 12px;">Copia e incolla l'intero blocco della corsa</span>
+            </div>
+            <textarea id="rawInput" placeholder="Esempio di input:&#10;Towcester&#10;6:02&#10;Race 12 A7 - 500m&#10;Confey Blaze bk b Ballymac...&#10;Great Time be b Malachi..."></textarea>
+            <div class="action-bar">
+                <div id="statusOutput" class="status-message">Pronto per l'elaborazione tattica.</div>
+                <button id="analyzeBtn" onclick="runAnalysis()">Elabora Pronostico</button>
+            </div>
         </div>
-        <div id="barsCard" class="card"></div>
-        <div class="card">
-          <button class="btn-expand" onclick="toggleDetails()">MOSTRA/NASCONDI DETTAGLI</button>
-          <div id="detailsContent" class="details-content hidden"></div>
+
+        <div class="panel">
+            <div class="panel-title">
+                <span>Analisi Cinica e Verdetto Operativo</span>
+                <span style="color: var(--accent-green); font-size: 12px;">Output in tempo reale</span>
+            </div>
+            <div id="aiOutput" class="output-box">Inserisci i dati a sinistra, assicurati di aver inserito la tua API Key in alto e clicca su "ELABORA PRONOSTICO". Il modello elaborerà l'analisi geometrica dei primi 5 metri, analizzerà gli split time e genererà la griglia percentuale "Top 2" con il verdetto finale.</div>
         </div>
-      </div>
-    </section>
-
-    <section id="sec-archive" class="section hidden">
-      <div class="card">
-        <div class="section-title">📁 Archivio Pick</div>
-        <div class="action-row">
-          <button class="btn-secondary" onclick="renderArchive()">AGGIORNA</button>
-          <button class="btn-secondary" onclick="exportCSV()">SCARICA CSV</button>
-          <button class="btn-danger" onclick="resetArchive()">RESET ARCHIVIO</button>
-        </div>
-      </div>
-      <div id="archiveStats" class="archive-stats"></div>
-      <div class="card table-wrap" id="archiveTable"></div>
-    </section>
-
-    <section id="sec-stats" class="section hidden">
-      <div class="card">
-        <div class="section-title">📊 Statistiche</div>
-        <button class="btn-secondary" onclick="renderStats()">AGGIORNA STATISTICHE</button>
-        <div id="statsContent"></div>
-      </div>
-    </section>
-
-    <section id="sec-settings" class="section hidden">
-      <div class="card">
-        <div class="section-title">⚙️ Impostazioni Stake</div>
-        <div class="settings-grid">
-          <div class="setting-item">
-            <label>Bankroll €</label>
-            <input id="setBankroll" type="number" value="100" step="1" onchange="saveSettings()" />
-          </div>
-          <div class="setting-item">
-            <label>Stake Mode</label>
-            <select id="setStakeMode" onchange="saveSettings()">
-              <option value="fixed">Stake fisso</option>
-              <option value="percent">% bankroll</option>
-            </select>
-          </div>
-          <div class="setting-item">
-            <label>Stake fisso €</label>
-            <input id="setFixedStake" type="number" value="5" step="0.5" onchange="saveSettings()" />
-          </div>
-          <div class="setting-item">
-            <label>% bankroll</label>
-            <input id="setPercentStake" type="number" value="2" min="1" max="10" step="1" onchange="saveSettings()" />
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <input id="backupInput" type="file" accept=".json,application/json" style="display:none" onchange="importBackup(event)" />
-  <script>
-// TFX PRO TOP2 V71 GEOMETRY - 3 Pilastri + Filtro
-const STORE_KEY = "tfx_top2_v70";
-let lastAnalysis = null;
-
-// ========== NAV ==========
-function toggleNav() {
-  document.getElementById("sidenav").classList.toggle("open");
-  document.getElementById("overlay").classList.toggle("open");
-}
-function showSection(name) {
-  document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
-  document.querySelectorAll(".section").forEach(s => s.classList.add("hidden"));
-  const sec = document.getElementById("sec-" + name);
-  if (sec) { sec.classList.remove("hidden"); sec.classList.add("active"); }
-  document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
-  if (window.event?.target) window.event.target.classList.add("active");
-  if (document.getElementById("sidenav").classList.contains("open")) toggleNav();
-  if (name === "archive") renderArchive();
-  if (name === "stats") renderStats();
-}
-
-// ========== SETTINGS ==========
-function getSettings() {
-  try { return JSON.parse(localStorage.getItem(STORE_KEY + "_settings") || "{}"); } catch { return {}; }
-}
-function saveSettings() {
-  const s = {
-    bankroll: parseFloat(document.getElementById("setBankroll")?.value || 100),
-    stakeMode: document.getElementById("setStakeMode")?.value || "fixed",
-    fixedStake: parseFloat(document.getElementById("setFixedStake")?.value || 5),
-    percentStake: parseFloat(document.getElementById("setPercentStake")?.value || 2)
-  };
-  localStorage.setItem(STORE_KEY + "_settings", JSON.stringify(s));
-}
-function loadSettings() {
-  const s = getSettings();
-  if (document.getElementById("setBankroll")) document.getElementById("setBankroll").value = s.bankroll ?? 100;
-  if (document.getElementById("setStakeMode")) document.getElementById("setStakeMode").value = s.stakeMode ?? "fixed";
-  if (document.getElementById("setFixedStake")) document.getElementById("setFixedStake").value = s.fixedStake ?? 5;
-  if (document.getElementById("setPercentStake")) document.getElementById("setPercentStake").value = s.percentStake ?? 2;
-}
-function calcStake(bankroll) {
-  const s = getSettings();
-  const bank = bankroll || s.bankroll || 100;
-  if (s.stakeMode === "percent") return Math.max(0.5, bank * (s.percentStake || 2) / 100);
-  return s.fixedStake || 5;
-}
-
-// ========== PARSER ==========
-function cleanTextRP(text) {
-  return String(text || "")
-    .replace(/\u00a0/g, " ")
-    .replace(/\r/g, "\n")
-    .replace(/Date\s*Track\s*Dis\s*Trp\s*Split\s*Fin\s*By\s*SP\s*Grade\s*CalTm/gi, " ")
-    .replace(/(Cards|Results|News)/gi, "\n$1\n")
-    .replace(/\s+/g, " ");
-}
-
-function parseMeta(text) {
-  const trackList = ["Dunstall Park","Sunderland","Romford","Monmore","Towcester","Sheffield","Newcastle","Hove","Nottingham","Doncaster","Kinsley","Oxford","Yarmouth","Crayford","Central Park","Harlow","Waterford","Pelaw Grange","Suffolk Downs","Swindon","Perry Barr"];
-  const track = trackList.find(t => new RegExp("\\b" + t.replace(/ /g, "\\s+") + "\\b", "i").test(text)) || "N/D";
-  const time = (text.match(/\b\d{1,2}:\d{2}\b/) || ["N/D"])[0];
-  const race = (text.match(/Race\s+\d+\s+[A-Z0-9]+\s*-\s*\d{3,4}m\s+Flat/i) || text.match(/Race\s+\d+[^\n]*/i) || ["Race N/D"])[0].replace(/\s+/g, " ");
-  const cls = (race.match(/\b(OR\d*|A\d+|D\d+|S\d+|HP)\b/i) || ["", ""])[1].toUpperCase();
-  const dist = (race.match(/(\d{3,4})m/i) || ["", ""])[1];
-  const post = (text.match(/POST\s+PICK:\s*([0-9\-]+)/i) || ["", "N/D"])[1];
-  const date = (text.match(/\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{1,2}\b/i) || ["N/D"])[0];
-  return { track, time, race, cls, dist: dist ? dist + "m" : "", distNum: dist ? parseInt(dist) : 0, post, date };
-}
-
-function cleanName(name) { return String(name || "").replace(/\s+\((M|W|R)\)\s*$/i, "").replace(/\bUpcoming\b/gi, "").replace(/\s+/g, " ").trim(); }
-function validName(s) {
-  s = cleanName(s);
-  if (!s || s.length < 3 || s.length > 45 || !/^[A-Z]/.test(s)) return false;
-  if (/RIEPILOGO|CONTROLLO|CLASSIFICA|PICK|Reader|Predictor|Results|News|Cards|ANALIZZA|PULISCI|DateTrack|GradeCalTm/i.test(s)) return false;
-  if (/^\d{2}[A-Za-z]{3}\d{2}\b/.test(s)) return false;
-  if (/^BRT:\s*/i.test(s)) return false;
-  if (/\b(bk|bd|be|bkw|wbk|wbe|dkbd|bebd|f)\b\s+\b(d|b)\b/i.test(s)) return false;
-  return true;
-}
-
-function findNameBeforeBRT(full, brtIndex, lastStart) {
-  const windowText = full.slice(Math.max(0, lastStart), brtIndex);
-  const re = /([A-Z][A-Za-z' .-]{2,45}(?:\s*\([MWR]\))?)\s+(?=(bk|bd|be|bkw|wbk|wbe|dkbd|bebd|f)\s+[db]\b)/gi;
-  let m, best = "";
-  while ((m = re.exec(windowText)) !== null) {
-    let cand = cleanName(m[1]).replace(/\b(DateTrack|Grade|CalTm|Cards|Results|News)\b/gi, "").trim();
-    cand = cand.split(/\d{2}[A-Za-z]{3}\d{2}/).pop().trim();
-    if (validName(cand)) best = cand;
-  }
-  return best;
-}
-
-function parseRun(line) {
-  const s = String(line || "").replace(/\s+/g, " ").trim();
-  const date = (s.match(/^(\d{2}[A-Za-z]{3}\d{2})/) || [])[1] || "";
-  const dist = (s.match(/\b(\d{3,4})m\b/i) || [])[1] || "";
-  const trap = (s.match(/\[([1-6])\]/) || [])[1] || "";
-  const fin = (s.match(/\b(1st|2nd|3rd|4th|5th|6th|NR|T)\b/i) || [])[1] || "";
-  const gradeMatch = s.match(/\b(OR\d*|A\d+|D\d+|S\d+|B\d+|HP|T\d?)\b/i);
-  const grade = gradeMatch ? gradeMatch[1].toUpperCase() : "";
-  const nums = [...s.matchAll(/\b\d{1,2}\.\d{2}\b/g)].map(m => parseFloat(m[0]));
-  const cal = nums.filter(n => n >= 10).pop() || null;
-  const split = nums.find(n => n < 10) || null;
-  const pos = fin === "1st" ? 1 : fin === "2nd" ? 2 : fin === "3rd" ? 3 : fin === "4th" ? 4 : fin === "5th" ? 5 : fin === "6th" ? 6 : null;
-  const hasRealFinish = /^(1st|2nd|3rd|4th|5th|6th)$/i.test(fin);
-  const official = !!cal && hasRealFinish && (!grade || !/^T/i.test(grade));
-  const trial = !!cal && !official && fin !== "NR";
-  return { date, dist: dist ? parseInt(dist) : null, trap, split, fin, grade, cal, official, trial, pos, raw: line };
-}
-
-function compactRuns(block) {
-  const runs = [];
-  let txt = String(block || "")
-    .replace(/\u00a0/g, " ")
-    .replace(/DateTrackDisTrpSplitFinBySPGradeCalTm/gi, " ")
-    .replace(/Date\s*Track\s*Dis\s*Trp\s*Split\s*Fin\s*By\s*SP\s*Grade\s*CalTm/gi, " ")
-    .replace(/(Cards|Results|News).*$/i, " ")
-    .replace(/\s+/g, " ");
-  const entries = txt.split(/(?=\d{2}[A-Za-z]{3}\d{2})/g).map(x => x.trim()).filter(x => /^\d{2}[A-Za-z]{3}\d{2}/.test(x));
-  for (const e of entries) {
-    const m = e.match(/^(\d{2}[A-Za-z]{3}\d{2})\s*([A-Za-z]+)\s*(\d{3,4})m\s*\[?([1-6])?\]?\s*([0-9]\.\d{2})?\s*(NR|T|1st|2nd|3rd|4th|5th|6th)?(.*)$/i);
-    if (!m) continue;
-    const rest = m[7] || "";
-    const nums = [...rest.matchAll(/\d{1,2}\.\d{2}/g)].map(x => x[0]);
-    let cal = nums.length ? nums[nums.length - 1] : "";
-    const gradeMatch = rest.match(/\b(OR\d*|A\d+|D\d+|S\d+|B\d+|HP|T\d?)\b/i);
-    const grade = gradeMatch ? gradeMatch[1].toUpperCase() : "";
-    let f = m[6] || "";
-    if (!f && /\bT\b/i.test(rest)) f = "T";
-    if (!cal) continue;
-    const line = `${m[1]} ${m[2]} ${m[3]}m [${m[4] || ""}] ${m[5] || ""} ${f} ${grade} ${cal}`;
-    const r = parseRun(line);
-    if (r.date && r.cal) runs.push(r);
-  }
-  return runs;
-}
-
-function parseDogs(text) {
-  const full = cleanTextRP(text);
-  const dogs = [];
-  const brts = [...full.matchAll(/BRT:\s*([0-9.]+)/gi)].map(m => ({ idx: m.index, brt: parseFloat(m[1]) }));
-  for (let b = 0; b < brts.length && dogs.length < 6; b++) {
-    const cur = brts[b], next = brts[b + 1] ? brts[b + 1].idx : full.length;
-    const prev = brts[b - 1] ? brts[b - 1].idx : 0;
-    const name = findNameBeforeBRT(full, cur.idx, prev);
-    if (!validName(name)) continue;
-    const block = full.slice(cur.idx, next);
-    let trainer = (block.match(/Tnr:\s*([^0-9]+?)(?=DateTrack|Date\s*Track|\d{2}[A-Za-z]{3}\d{2}|$)/i) || [])[1] || "";
-    trainer = trainer.replace(/\b(Cards|Results|News).*$/i, "").trim();
-    let runs = compactRuns(block);
-    if (!runs.length) {
-      const simple = [...block.matchAll(/(\d{2}[A-Za-z]{3}\d{2}.*?)(?=\d{2}[A-Za-z]{3}\d{2}|$)/gi)].map(x => x[1]);
-      simple.forEach(line => { const r = parseRun(line); if (r.date && r.cal) runs.push(r); });
-    }
-    dogs.push({ trap: dogs.length + 1, name, brt: cur.brt || null, trainer, runs });
-  }
-  return dogs;
-}
-
-// ========== NEW MODEL: 3 PILLARS + FILTER ==========
-
-function calcScore(dog, allDogs, meta) {
-  const runs = dog.runs.filter(r=>r.official).slice(0,5);
-
-  const splits = runs.map(r=>r.split).filter(Boolean);
-  const avgSplit = splits.length ? splits.reduce((a,b)=>a+b,0)/splits.length : 9;
-
-  const allSplits = allDogs.map(d=>{
-    const s=d.runs.filter(r=>r.official).slice(0,5).map(r=>r.split).filter(Boolean);
-    return s.length ? s.reduce((a,b)=>a+b,0)/s.length : 9;
-  });
-
-  const bestSplit = Math.min(...allSplits);
-  const worstSplit = Math.max(...allSplits);
-
-  let splitScore = 50;
-  if(worstSplit>bestSplit){
-    splitScore = 100 - (((avgSplit-bestSplit)/(worstSplit-bestSplit))*100);
-  }
-
-  let geometryScore = 50;
-  const left = allDogs.find(x=>x.trap===dog.trap-1);
-  const right = allDogs.find(x=>x.trap===dog.trap+1);
-
-  const leftSplit = left ? (left.runs.filter(r=>r.official).slice(0,5).map(r=>r.split).filter(Boolean).reduce((a,b)=>a+b,0)/(left.runs.filter(r=>r.official).slice(0,5).map(r=>r.split).filter(Boolean).length||1)) : 9;
-  const rightSplit = right ? (right.runs.filter(r=>r.official).slice(0,5).map(r=>r.split).filter(Boolean).reduce((a,b)=>a+b,0)/(right.runs.filter(r=>r.official).slice(0,5).map(r=>r.split).filter(Boolean).length||1)) : 9;
-
-  if(avgSplit < leftSplit) geometryScore += 15;
-  if(avgSplit < rightSplit) geometryScore += 15;
-
-  if(dog.trap===1 || dog.trap===6) geometryScore += 10;
-
-  let formScore = 50;
-  const pos = runs.map(r=>r.pos).filter(Boolean);
-  if(pos.length){
-    const top2 = pos.filter(x=>x<=2).length/pos.length;
-    formScore = Math.round(top2*100);
-  }
-
-  let engineScore = 50;
-  if(dog.brt){
-    const brts = allDogs.map(x=>x.brt).filter(Boolean);
-    const bestBrt = Math.min(...brts);
-    const worstBrt = Math.max(...brts);
-    if(worstBrt>bestBrt){
-      engineScore = 100 - (((dog.brt-bestBrt)/(worstBrt-bestBrt))*100);
-    }
-  }
-
-  const score = Math.round(
-    splitScore*0.40 +
-    geometryScore*0.25 +
-    formScore*0.20 +
-    engineScore*0.15
-  );
-
-  return {
-    score,
-    placementScore: Math.round(geometryScore),
-    timeScore: Math.round(splitScore),
-    trendScore: Math.round(formScore),
-    top2Pct: Math.round(formScore),
-    avgPos:"-",
-    avgTime:avgSplit.toFixed(2),
-    bestTime:dog.brt||"-",
-    officialCount:runs.length,
-    sameDistCount:runs.length,
-    dataQuality:runs.length>=3?"good":"fair"
-  };
-}
-
-
-// ========== FILTERS ==========
-function applyFilters(ranked, meta) {
-  const filters = [];
-  const pick1 = ranked[0];
-  const pick3 = ranked[2];
-
-  if (pick1 && pick1.metrics.officialCount < 3) {
-    filters.push({ type: "warning", text: "⚠️ Pick #1 ha meno di 3 gare ufficiali — dati fragili" });
-  }
-
-  const gap = pick1 && pick3 ? pick1.metrics.score - pick3.metrics.score : 99;
-  if (gap < 5) {
-    filters.push({ type: "danger", text: "🔴 Gara troppo equilibrata (gap < 5 punti) — NO BET" });
-  }
-
-  if (pick1 && pick1.metrics.top2Pct < 40) {
-    filters.push({ type: "warning", text: "⚠️ Nessun cane con >40% Top2 nelle ultime gare" });
-  }
-
-  if (ranked.length < 5) {
-    filters.push({ type: "warning", text: "⚠️ Solo " + ranked.length + "/6 cani letti dalla card" });
-  }
-
-  if (pick1 && pick1.metrics.sameDistCount < 2) {
-    filters.push({ type: "info", text: "ℹ️ Poche gare sulla stessa distanza per la pick" });
-  }
-
-  const hasDanger = filters.some(f => f.type === "danger");
-  const hasWarning = filters.some(f => f.type === "warning");
-
-  return { filters, verdict: hasDanger ? "NOBET" : hasWarning ? "LIGHT" : "BET", gap };
-}
-
-// ========== VERDICT ==========
-function getVerdict(score, filterVerdict, dataQuality) {
-  if (filterVerdict === "NOBET") return "NO BET";
-  if (dataQuality === "poor") return "NO BET";
-  if (score >= 65 && filterVerdict === "BET") return "BET";
-  if (score >= 55) return "LIGHT";
-  return "NO BET";
-}
-
-// ========== ANALYZE ==========
-function analyzeCard() {
-  const text = document.getElementById("cardInput").value;
-  if (!text.trim()) return;
-
-  const meta = parseMeta(text);
-  const dogs = parseDogs(text);
-  if (!dogs.length) {
-    alert("Nessun levriero trovato nella card. Controlla il formato.");
-    return;
-  }
-
-  const scored = dogs.map(d => ({ ...d, metrics: calcScore(d, dogs, meta) }));
-  const ranked = [...scored].sort((a, b) => b.metrics.score - a.metrics.score);
-
-  const { filters, verdict: filterVerdict, gap } = applyFilters(ranked, meta);
-
-  const pick1 = ranked[0];
-  const pick2 = ranked[1];
-  const finalVerdict = getVerdict(pick1.metrics.score, filterVerdict, pick1.metrics.dataQuality);
-
-  lastAnalysis = { meta, dogs: scored, ranked, filters, filterVerdict, gap, verdict: finalVerdict };
-
-  renderFilters(filters, filterVerdict);
-  renderPicks(pick1, pick2, finalVerdict, gap);
-  renderBars(ranked);
-  renderDetails(ranked);
-
-  document.getElementById("pickResult").classList.remove("hidden");
-}
-
-function renderFilters(filters, verdict) {
-  const el = document.getElementById("filtersAlert");
-  if (!filters.length) {
-    el.classList.add("hidden");
-    return;
-  }
-  el.classList.remove("hidden");
-  el.className = "card filters-card " + (verdict === "NOBET" ? "" : verdict === "LIGHT" ? "warning" : "pass");
-  el.innerHTML = filters.map(f =>
-    `<div class="filter-item"><span class="filter-icon">${f.type === "danger" ? "🔴" : f.type === "warning" ? "🟡" : "🔵"}</span><span>${f.text}</span></div>`
-  ).join("");
-}
-
-function renderPicks(pick1, pick2, verdict, gap) {
-  const scoreClass = (s) => s >= 65 ? "score-green" : s >= 50 ? "score-yellow" : "score-red";
-
-  document.getElementById("pick1Card").innerHTML = `
-    <div class="pick-label">🥇 Pick #1</div>
-    <div class="pick-trap">T${pick1.trap}</div>
-    <div class="pick-name">${pick1.name}</div>
-    <div class="pick-score ${scoreClass(pick1.metrics.score)}">${pick1.metrics.score}</div>
-    <div style="font-size:11px;color:var(--muted);margin-top:4px">Top2: ${pick1.metrics.top2Pct}% · Avg: ${pick1.metrics.avgPos}</div>
-  `;
-
-  document.getElementById("pick2Card").innerHTML = pick2 ? `
-    <div class="pick-label">🥈 Pick #2</div>
-    <div class="pick-trap second">T${pick2.trap}</div>
-    <div class="pick-name">${pick2.name}</div>
-    <div class="pick-score ${scoreClass(pick2.metrics.score)}">${pick2.metrics.score}</div>
-    <div style="font-size:11px;color:var(--muted);margin-top:4px">Top2: ${pick2.metrics.top2Pct}% · Avg: ${pick2.metrics.avgPos}</div>
-  ` : "";
-
-  const verdictClass = verdict === "BET" ? "verdict-bet" : verdict === "LIGHT" ? "verdict-light" : "verdict-nobet";
-  const reason = verdict === "NO BET" ? "Filtri non superati o dati insufficienti" :
-    verdict === "LIGHT" ? "Segnale presente ma con cautela" :
-    "Segnale forte — gap " + gap + " punti";
-
-  document.getElementById("verdictCard").innerHTML = `
-    <div class="pick-label">⚡ Verdetto</div>
-    <div class="verdict-label ${verdictClass}">${verdict}</div>
-    <div class="verdict-reason">${reason}</div>
-    <div class="verdict-gap">Gap #1 vs #3: <strong>${gap}</strong></div>
-  `;
-}
-
-function renderBars(ranked) {
-  const maxScore = ranked[0]?.metrics.score || 1;
-  const html = ranked.map(d => {
-    const pct = Math.round((d.metrics.score / Math.max(maxScore, 1)) * 100);
-    const color = d.metrics.score >= 65 ? "green" : d.metrics.score >= 50 ? "yellow" : "red";
-    const v = d.metrics.score >= 65 ? "BET" : d.metrics.score >= 50 ? "LIGHT" : "NO";
-    return `<div class="bar-row">
-      <span class="bar-trap">T${d.trap}</span>
-      <span class="bar-name">${d.name}</span>
-      <div class="bar-track"><div class="bar-fill ${color}" style="width:${pct}%">${d.metrics.score}</div></div>
-      <span class="bar-verdict" style="color:var(--${color})">${v}</span>
-    </div>`;
-  }).join("");
-  document.getElementById("barsCard").innerHTML = `<div style="padding:4px 0">${html}</div>`;
-}
-
-function renderDetails(ranked) {
-  const html = ranked.map(d => {
-    const runsHtml = d.runs.slice(0, 5).map(r =>
-      `${r.date} ${r.dist || "-"}m [${r.trap || "-"}] ${r.fin || "-"} ${r.grade || "-"} ${r.cal || "-"} ${r.official ? "✓" : "○"}`
-    ).join("\n");
-
-    return `<div class="dog-detail">
-      <div class="dog-header">
-        <span class="dog-title">T${d.trap} · ${d.name}</span>
-        <span style="font-size:12px;color:var(--muted)">${d.trainer || ""}</span>
-      </div>
-      <div class="dog-metrics">
-        <div class="metric"><div class="metric-label">Score</div><div class="metric-value">${d.metrics.score}</div></div>
-        <div class="metric"><div class="metric-label">Piazzamento</div><div class="metric-value">${d.metrics.placementScore}</div></div>
-        <div class="metric"><div class="metric-label">Tempo</div><div class="metric-value">${d.metrics.timeScore}</div></div>
-        <div class="metric"><div class="metric-label">Trend</div><div class="metric-value">${d.metrics.trendScore}</div></div>
-        <div class="metric"><div class="metric-label">Top2 %</div><div class="metric-value">${d.metrics.top2Pct}%</div></div>
-        <div class="metric"><div class="metric-label">Avg Pos</div><div class="metric-value">${d.metrics.avgPos}</div></div>
-        <div class="metric"><div class="metric-label">Avg Time</div><div class="metric-value">${d.metrics.avgTime}</div></div>
-        <div class="metric"><div class="metric-label">Best Time</div><div class="metric-value">${d.metrics.bestTime}</div></div>
-        <div class="metric"><div class="metric-label">BRT</div><div class="metric-value">${d.brt || "-"}</div></div>
-        <div class="metric"><div class="metric-label">Ufficiali</div><div class="metric-value">${d.metrics.officialCount}</div></div>
-        <div class="metric"><div class="metric-label">Stessa Dist</div><div class="metric-value">${d.metrics.sameDistCount}</div></div>
-        <div class="metric"><div class="metric-label">Qualità Dati</div><div class="metric-value">${d.metrics.dataQuality === "good" ? "🟢" : d.metrics.dataQuality === "fair" ? "🟡" : "🔴"}</div></div>
-      </div>
-      <pre class="dog-runs">${runsHtml || "Nessuna corsa trovata"}</pre>
-    </div>`;
-  }).join("");
-  document.getElementById("detailsContent").innerHTML = html;
-}
-
-function toggleDetails() {
-  const el = document.getElementById("detailsContent");
-  el.classList.toggle("hidden");
-}
-
-function clearInput() {
-  document.getElementById("cardInput").value = "";
-  document.getElementById("pickResult").classList.add("hidden");
-  document.getElementById("filtersAlert").classList.add("hidden");
-  lastAnalysis = null;
-}
-
-// ========== ARCHIVE ==========
-function getArchive() { try { return JSON.parse(localStorage.getItem(STORE_KEY) || "[]"); } catch { return []; } }
-function setArchive(arr) { localStorage.setItem(STORE_KEY, JSON.stringify(arr)); }
-
-function savePick() {
-  if (!lastAnalysis || !lastAnalysis.ranked.length) { alert("Prima analizza una card"); return; }
-  const pick = lastAnalysis.ranked[0];
-  const second = lastAnalysis.ranked[1];
-  const archive = getArchive();
-  const settings = getSettings();
-  const stake = calcStake(settings.bankroll || 100);
-
-  archive.push({
-    id: Date.now(),
-    date: new Date().toLocaleString(),
-    track: lastAnalysis.meta.track,
-    raceDate: lastAnalysis.meta.date,
-    time: lastAnalysis.meta.time,
-    race: lastAnalysis.meta.race,
-    dist: lastAnalysis.meta.dist,
-    pickTrap: pick.trap,
-    pickName: pick.name,
-    pickScore: pick.metrics.score,
-    pickTop2: pick.metrics.top2Pct,
-    pickAvgPos: pick.metrics.avgPos,
-    secondTrap: second?.trap || "",
-    secondName: second?.name || "",
-    secondScore: second?.metrics.score || "",
-    gap: lastAnalysis.gap,
-    verdict: lastAnalysis.verdict,
-    stake: stake.toFixed(2),
-    quota: "",
-    arrival: "",
-    result: "PENDING",
-    pl: ""
-  });
-  setArchive(archive);
-  alert("✅ Pick salvata in archivio");
-}
-
-function updateArrival(id, val) {
-  const archive = getArchive();
-  const row = archive.find(x => x.id === id);
-  if (!row) return;
-  row.arrival = val;
-  const nums = String(val).split(/[-,\s]+/).map(Number).filter(Boolean);
-  if (nums.length >= 2) {
-    row.result = nums.slice(0, 2).includes(Number(row.pickTrap)) ? "WIN" : "LOSE";
-    const stake = parseFloat(row.stake || 0);
-    const quota = parseFloat(row.quota || 0);
-    row.pl = row.result === "WIN" && quota > 1 ? (stake * (quota - 1)).toFixed(2) : row.result === "LOSE" ? (-stake).toFixed(2) : "";
-  } else {
-    row.result = "PENDING";
-    row.pl = "";
-  }
-  setArchive(archive);
-  renderArchive();
-}
-
-function updateQuota(id, val) {
-  const archive = getArchive();
-  const row = archive.find(x => x.id === id);
-  if (!row) return;
-  row.quota = val;
-  if (row.result === "WIN") {
-    const stake = parseFloat(row.stake || 0);
-    const quota = parseFloat(val || 0);
-    row.pl = quota > 1 ? (stake * (quota - 1)).toFixed(2) : "0";
-  }
-  setArchive(archive);
-  renderArchive();
-}
-
-function deleteRow(id) {
-  if (!confirm("Eliminare questa scommessa?")) return;
-  const archive = getArchive().filter(x => x.id !== id);
-  setArchive(archive);
-  renderArchive();
-}
-
-function renderArchive() {
-  const archive = getArchive();
-  const done = archive.filter(x => x.result === "WIN" || x.result === "LOSE");
-  const wins = done.filter(x => x.result === "WIN").length;
-  const wr = done.length ? ((wins / done.length) * 100).toFixed(1) : "0.0";
-  const totalPL = done.reduce((a, x) => a + parseFloat(x.pl || 0), 0);
-  const settings = getSettings();
-  const bankroll = (settings.bankroll || 100) + totalPL;
-
-  const statsEl = document.getElementById("archiveStats");
-  if (statsEl) {
-    statsEl.innerHTML = `
-      <div class="stat-box"><div class="stat-label">Totali</div><div class="stat-value">${archive.length}</div></div>
-      <div class="stat-box"><div class="stat-label">Concluse</div><div class="stat-value">${done.length}</div></div>
-      <div class="stat-box"><div class="stat-label">Win Rate</div><div class="stat-value">${wr}%</div></div>
-      <div class="stat-box"><div class="stat-label">P/L</div><div class="stat-value ${totalPL < 0 ? 'negative' : ''}">${totalPL.toFixed(2)}€</div></div>
-      <div class="stat-box"><div class="stat-label">Bankroll</div><div class="stat-value ${bankroll < (settings.bankroll || 100) ? 'negative' : ''}">${bankroll.toFixed(2)}€</div></div>
-    `;
-  }
-
-  const tableEl = document.getElementById("archiveTable");
-  if (!tableEl) return;
-
-  if (!archive.length) {
-    tableEl.innerHTML = '<p style="color:var(--muted);padding:12px">Nessuna scommessa salvata.</p>';
-    return;
-  }
-
-  let table = `<table><thead><tr>
-    <th>Data</th><th>Track</th><th>Pick</th><th>Score</th><th>Gap</th><th>Verdetto</th><th>Stake</th><th>Quota</th><th>Arrivo</th><th>Esito</th><th>P/L</th><th></th>
-  </tr></thead><tbody>`;
-
-  archive.slice().reverse().forEach(row => {
-    const resultClass = row.result === "WIN" ? "win" : row.result === "LOSE" ? "lose" : "pending";
-    table += `<tr>
-      <td>${row.raceDate || ""}<br><small>${row.time || ""}</small></td>
-      <td>${row.track}</td>
-      <td><strong>T${row.pickTrap}</strong><br><small>${row.pickName}</small></td>
-      <td>${row.pickScore}</td>
-      <td>${row.gap}</td>
-      <td><span class="${resultClass}">${row.verdict}</span></td>
-      <td>${row.stake}€</td>
-      <td><input value="${row.quota || ""}" onchange="updateQuota(${row.id},this.value)" placeholder="2.00"></td>
-      <td><input value="${row.arrival || ""}" onchange="updateArrival(${row.id},this.value)" placeholder="3-1-5"></td>
-      <td class="${resultClass}">${row.result}</td>
-      <td class="${parseFloat(row.pl || 0) >= 0 ? 'win' : 'lose'}">${row.pl || ""}</td>
-      <td><button class="mini-btn danger" onclick="deleteRow(${row.id})">✕</button></td>
-    </tr>`;
-  });
-  table += "</tbody></table>";
-  tableEl.innerHTML = table;
-}
-
-// ========== STATS ==========
-function renderStats() {
-  const archive = getArchive();
-  const done = archive.filter(x => x.result === "WIN" || x.result === "LOSE");
-  if (!done.length) {
-    document.getElementById("statsContent").innerHTML = '<p style="color:var(--muted)">Nessuna scommessa conclusa per le statistiche.</p>';
-    return;
-  }
-
-  const trackMap = {};
-  done.forEach(x => {
-    const t = x.track || "N/D";
-    if (!trackMap[t]) trackMap[t] = { total: 0, win: 0, pl: 0 };
-    trackMap[t].total++;
-    if (x.result === "WIN") trackMap[t].win++;
-    trackMap[t].pl += parseFloat(x.pl || 0);
-  });
-
-  const bands = [
-    { name: "65+", min: 65, max: 999 },
-    { name: "55-64", min: 55, max: 64 },
-    { name: "<55", min: 0, max: 54 }
-  ];
-  const bandStats = bands.map(b => {
-    const items = done.filter(x => x.pickScore >= b.min && x.pickScore <= b.max);
-    const w = items.filter(x => x.result === "WIN").length;
-    return { name: b.name, total: items.length, win: w, wr: items.length ? ((w / items.length) * 100).toFixed(1) : "0", pl: items.reduce((a, x) => a + parseFloat(x.pl || 0), 0) };
-  });
-
-  const verdicts = ["BET", "LIGHT", "NO BET"];
-  const verdictStats = verdicts.map(v => {
-    const items = done.filter(x => x.verdict === v);
-    const w = items.filter(x => x.result === "WIN").length;
-    return { name: v, total: items.length, win: w, wr: items.length ? ((w / items.length) * 100).toFixed(1) : "0", pl: items.reduce((a, x) => a + parseFloat(x.pl || 0), 0) };
-  });
-
-  let html = `<div class="stats-grid">`;
-
-  html += `<div class="stats-card"><h3>🏟️ Per Circuito</h3>`;
-  Object.entries(trackMap).sort((a, b) => b[1].total - a[1].total).forEach(([track, data]) => {
-    const wr = ((data.win / data.total) * 100).toFixed(0);
-    html += `<div class="stats-row"><span>${track} (${data.total})</span><b>${wr}% · ${data.pl >= 0 ? "+" : ""}${data.pl.toFixed(1)}€</b></div>`;
-  });
-  html += `</div>`;
-
-  html += `<div class="stats-card"><h3>📊 Per Fascia Score</h3>`;
-  bandStats.forEach(b => {
-    html += `<div class="stats-row"><span>${b.name} (${b.total})</span><b>${b.wr}% · ${b.pl >= 0 ? "+" : ""}${b.pl.toFixed(1)}€</b></div>`;
-  });
-  html += `</div>`;
-
-  html += `<div class="stats-card"><h3>⚡ Per Verdetto</h3>`;
-  verdictStats.forEach(v => {
-    html += `<div class="stats-row"><span>${v.name} (${v.total})</span><b>${v.wr}% · ${v.pl >= 0 ? "+" : ""}${v.pl.toFixed(1)}€</b></div>`;
-  });
-  html += `</div>`;
-
-  const last10 = done.slice(-10);
-  const l10w = last10.filter(x => x.result === "WIN").length;
-  html += `<div class="stats-card"><h3>📈 Ultime 10</h3>
-    <div class="stats-row"><span>Win</span><b>${l10w}/${last10.length}</b></div>
-    <div class="stats-row"><span>WR</span><b>${last10.length ? ((l10w / last10.length) * 100).toFixed(0) : "0"}%</b></div>
-    <div class="stats-row"><span>P/L</span><b>${last10.reduce((a, x) => a + parseFloat(x.pl || 0), 0).toFixed(2)}€</b></div>
-  </div>`;
-
-  html += `</div>`;
-  document.getElementById("statsContent").innerHTML = html;
-}
-
-// ========== EXPORT/IMPORT ==========
-function exportCSV() {
-  const archive = getArchive();
-  if (!archive.length) { alert("Archivio vuoto"); return; }
-  const keys = Object.keys(archive[0]);
-  const csv = [keys.join(";")].concat(archive.map(row => keys.map(k => `"${String(row[k] ?? "").replace(/"/g, '""')}"`).join(";"))).join("\n");
-  downloadBlob(csv, "TFX_TOP2_V70.csv", "text/csv");
-}
-
-function exportBackup() {
-  const archive = getArchive();
-  const payload = { app: "TFX_PRO_TOP2", version: "V70", created: new Date().toISOString(), settings: getSettings(), archive };
-  downloadBlob(JSON.stringify(payload, null, 2), "TFX_TOP2_V70_BACKUP.json", "application/json");
-}
-
-function importBackup(ev) {
-  const file = ev.target.files?.[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function () {
-    try {
-      const data = JSON.parse(reader.result);
-      const archive = Array.isArray(data) ? data : (data.archive || []);
-      if (!Array.isArray(archive)) throw new Error("Formato non valido");
-      const current = getArchive();
-      const merged = [...current];
-      archive.forEach(item => {
-        const exists = merged.some(x => x.id === item.id);
-        if (!exists) merged.push(item);
-      });
-      setArchive(merged);
-      if (data.settings) localStorage.setItem(STORE_KEY + "_settings", JSON.stringify(data.settings));
-      alert("✅ Backup importato. Totale: " + merged.length);
-      renderArchive();
-      loadSettings();
-    } catch (e) { alert("Errore: " + e.message); }
-  };
-  reader.readAsText(file);
-  ev.target.value = "";
-}
-
-function downloadBlob(content, filename, type) {
-  const blob = new Blob([content], { type: type + ";charset=utf-8" });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = filename;
-  a.click();
-}
-
-function resetArchive() {
-  if (!confirm("Sei sicuro di voler cancellare tutto l'archivio?")) return;
-  setArchive([]);
-  renderArchive();
-}
-
-// ========== INIT ==========
-loadSettings();
-renderArchive();
-
-</script>
+    </div>
+
+    <script>
+        // Salva e carica la chiave API in automatico nel localStorage del browser
+        const apiKeyInput = document.getElementById('apiKey');
+        if (localStorage.getItem('gemini_api_key')) {
+            apiKeyInput.value = localStorage.getItem('gemini_api_key');
+        }
+
+        apiKeyInput.addEventListener('input', () => {
+            localStorage.setItem('gemini_api_key', apiKeyInput.value);
+        });
+
+        async function runAnalysis() {
+            const apiKey = apiKeyInput.value.trim();
+            const rawData = document.getElementById('rawInput').value.trim();
+            const statusOutput = document.getElementById('statusOutput');
+            const aiOutput = document.getElementById('aiOutput');
+            const analyzeBtn = document.getElementById('analyzeBtn');
+
+            if (!apiKey) {
+                alert('Attenzione: Devi inserire una Gemini API Key valida per effettuare l\'analisi!');
+                return;
+            }
+
+            if (!rawData) {
+                alert('Attenzione: Il campo dati di Racing Post è vuoto!');
+                return;
+            }
+
+            // Impostazione stato interfaccia in caricamento
+            analyzeBtn.disabled = true;
+            statusOutput.innerHTML = '<span class="status-loading">Calcolo geometrie di lancio in corso...</span>';
+            aiOutput.textContent = "L'intelligenza artificiale sta analizzando gli split time, le traiettorie e i declassamenti della card... Attendi qualche secondo.";
+
+            // Definizione del prompt specialistico per guidare l'AI esattamente nello stile concordato
+            const systemPrompt = `Sei un analista professionista cinico e spietato di corse di levrieri (greyhounds), esperto di piste UK. Il tuo stile editoriale prende ispirazione dai grandi autori di noir nordici come Jo Nesbø: crudo, energico, esaltante, focalizzato sui primi metri, sulla geometria delle traiettorie, sugli split time e sui declassamenti delle categorie.
+            
+Il tuo unico obiettivo è estrarre dalle card i dettagli balistici per determinare quale cane finirà nelle prime 2 posizioni ("Filtro Top 2"). Nelle conversazioni e nell'output vai sempre a capo ma NON lasciare mai righe vuote (regola fondamentale).
+
+Analizza i dati della corsa forniti dall'utente e genera un report strutturato ESATTAMENTE in questo modo:
+1. Un'introduzione gasante ed energica nello stile noir nordico sul circuito e sulla categoria.
+2. Un'analisi chirurgica e balistica di ogni singola Trap analizzando lo Split iniziale, il Best Recent Time (BRT), la forma e la traiettoria attesa (es. traiettoria interna pulita o pericoli legati ai Wide 'W' o Middle 'M').
+3. Una tabella riassuntiva dei pronostici in puro formato HTML (usa i tag <table>, <tr>, <th>, <td>) contenente le colonne: Trap, Levriero, Punteggio Lancio, % Probabilità nei primi 2, Valutazione Tattica e Geometria.
+4. Un verdetto secco finale per la cassa che indica chiaramente la giocata sul mercato "Top 2" e l'accoppiata della morte consigliata.
+
+Ecco i dati della corsa da elaborare:
+${rawData}`;
+
+            try {
+                // Chiamata diretta alle API ufficiali di Google Gemini (Modello Flash, ultra rapido e ideale per questo scopo)
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{ text: systemPrompt }]
+                        }]
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.candidates && data.candidates[0].content.parts[0].text) {
+                    let aiText = data.candidates[0].content.parts[0].text;
+                    
+                    // Pulizia base del markdown dei blocchi di codice se l'AI dovesse includerli erroneamente
+                    aiText = aiText.replace(/```html/g, '').replace(/```/g, '');
+                    
+                    // Renderizziamo direttamente l'HTML generato (inclusa la tabella dinamica) nel pannello di destra
+                    aiOutput.innerHTML = aiText;
+                    statusOutput.textContent = 'Analisi completata con successo! Cassa pronta.';
+                } else {
+                    throw new Error(data.error?.message || 'Errore imprevisto nel tracciamento della risposta.');
+                }
+
+            } catch (error) {
+                console.error(error);
+                aiOutput.textContent = `ERRORE DI ELABORAZIONE: ${error.message}\\n\\nVerifica che la tua API Key sia corretta e che i dati incollati siano completi.`;
+                statusOutput.textContent = 'Errore nel caricamento balistico.';
+            } finally {
+                analyzeBtn.disabled = false;
+            }
+        }
+    </script>
 </body>
 </html>
+"""
+
+output_path = "dog_matrix_predictor.html"
+with open(output_path, "w", encoding="utf-8") as f:
+    f.write(html_content)
+"""
