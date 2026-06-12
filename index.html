@@ -93,8 +93,8 @@
             const promptTesto = "Sei un analista esperto di corse di levrieri UK. Analizza la geometria delle traiettorie, gli split time e i declassamenti delle categorie. Mostra una tabella HTML con le colonne Trap, Levriero, Punteggio Lancio, % Probabilità Top 2 e infine dai un verdetto finale con la giocata consigliata e l'accoppiata. Genera solo tag HTML puliti per l'output. Ecco la corsa:\n" + rawData;
 
             try {
-                // Forziamo l'indirizzo ufficiale v1 di produzione per il tuo progetto
-                const url = 'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=' + apiKey;
+                // Endpoint aggiornato con la dicitura esatta del modello richiesto da v1
+                const url = 'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash-latest:generateContent?key=' + apiKey;
                 
                 const response = await fetch(url, {
                     method: 'POST',
