@@ -88,12 +88,14 @@
 
             analyzeBtn.disabled = true;
             statusOutput.textContent = 'Calcolo in corso...';
-            aiOutput.textContent = 'L\'intelligenza artificiale sta elaborando i dati di Racing Post. Attendi...';
+            aiOutput.textContent = 'L\'intelligenza artificiale sta analizzando la card di Racing Post...';
 
-            const promptTesto = "Sei un analista esperto di corse di levrieri UK. Usa uno stile crudo, energico e analitico. Analizza la geometria delle traiettorie, gli split time e i declassamenti. Mostra una tabella HTML con le colonne Trap, Levriero, Punteggio Lancio, % Probabilità Top 2 e infine dai un verdetto finale con la giocata consigliata e l'accoppiata. Ecco la corsa:\n" + rawData;
+            const promptTesto = "Sei un analista esperto di corse di levrieri UK. Usa uno stile crudo, energico e analitico da romanzo noir. Analizza la geometria delle traiettorie, gli split time e i declassamenti delle categorie. Mostra una tabella HTML con le colonne Trap, Levriero, Punteggio Lancio, % Probabilità Top 2 e infine dai un verdetto finale con la giocata consigliata e l'accoppiata. Genera solo tag HTML puliti per l'output. Ecco la corsa:\n" + rawData;
 
             try {
-                const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + apiKey;
+                // CORREZIONE: Endpoint v1 ufficiale e pulito
+                const url = 'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=' + apiKey;
+                
                 const response = await fetch(url, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -106,6 +108,7 @@
 
                 if (data.candidates && data.candidates[0].content.parts[0].text) {
                     let risultato = data.candidates[0].content.parts[0].text;
+                    // Pulizia da eventuali blocchi markdown racchiusi dall'AI
                     risultato = risultato.replace(/```html/g, '').replace(/```/g, '');
                     aiOutput.innerHTML = risultato;
                     statusOutput.textContent = 'Completato!';
@@ -113,7 +116,7 @@
                     aiOutput.textContent = 'Errore da Google: ' + data.error.message;
                     statusOutput.textContent = 'Errore.';
                 } else {
-                    aiOutput.textContent = 'Risposta non chiara dal server. Controlla i dati immessi.';
+                    aiOutput.textContent = 'Risposta non valida dal server.';
                     statusOutput.textContent = 'Errore.';
                 }
             } catch (err) {
