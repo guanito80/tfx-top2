@@ -9,266 +9,62 @@
             --bg-dark: #0a0f1d;
             --panel-dark: #121829;
             --accent-green: #00ff66;
-            --accent-red: #ff3333;
             --accent-blue: #00e5ff;
             --text-main: #f0f4f8;
             --text-muted: #8fa0dd;
             --border-color: #202b47;
         }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        header {
-            background-color: var(--panel-dark);
-            padding: 20px;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-            margin-bottom: 25px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        h1 {
-            color: var(--accent-green);
-            font-size: 24px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        h1 span {
-            color: var(--text-main);
-        }
-
-        .config-box {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .config-box input {
-            background-color: var(--bg-dark);
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 13px;
-            width: 280px;
-            transition: all 0.3s;
-        }
-
-        .config-box input:focus {
-            outline: none;
-            border-color: var(--accent-green);
-            box-shadow: 0 0 10px rgba(0, 255, 102, 0.2);
-        }
-
-        .main-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 25px;
-            flex: 1;
-        }
-
-        @media (max-width: 1024px) {
-            .main-container {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .panel {
-            background-color: var(--panel-dark);
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-        }
-
-        .panel-title {
-            font-size: 16px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 15px;
-            color: var(--accent-blue);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: bold;
-        }
-
-        textarea {
-            width: 100%;
-            flex: 1;
-            min-height: 400px;
-            background-color: var(--bg-dark);
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            padding: 15px;
-            border-radius: 8px;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 14px;
-            resize: none;
-            line-height: 1.5;
-        }
-
-        textarea:focus {
-            outline: none;
-            border-color: var(--accent-blue);
-        }
-
-        .action-bar {
-            margin-top: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        button {
-            background: linear-gradient(135deg, #00ff66 0%, #00b347 100%);
-            color: #000;
-            border: none;
-            padding: 14px 28px;
-            font-size: 16px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(0, 255, 102, 0.3);
-        }
-
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 255, 102, 0.5);
-        }
-
-        button:disabled {
-            background: #202b47;
-            color: #556688;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        .output-box {
-            width: 100%;
-            flex: 1;
-            background-color: var(--bg-dark);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 20px;
-            overflow-y: auto;
-            font-size: 14px;
-            line-height: 1.6;
-            min-height: 400px;
-            white-space: pre-wrap;
-        }
-
-        .output-box h2, .output-box h3 {
-            color: var(--accent-green);
-            margin-top: 20px;
-            margin-bottom: 10px;
-            border-left: 4px solid var(--accent-green);
-            padding-left: 8px;
-            font-size: 16px;
-            text-transform: uppercase;
-        }
-        
-        .output-box table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 15px 0;
-            background-color: var(--panel-dark);
-            border-radius: 6px;
-            overflow: hidden;
-        }
-
-        .output-box th {
-            background-color: var(--border-color);
-            color: var(--accent-blue);
-            text-align: left;
-            padding: 10px;
-            font-size: 12px;
-            text-transform: uppercase;
-        }
-
-        .output-box td {
-            padding: 10px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .status-message {
-            font-size: 14px;
-            color: var(--text-muted);
-        }
-
-        .status-loading {
-            color: var(--accent-blue);
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 0.6; }
-            50% { opacity: 1; }
-            100% { opacity: 0.6; }
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+        body { background-color: var(--bg-dark); color: var(--text-main); padding: 20px; min-height: 100vh; display: flex; flex-direction: column; }
+        header { background-color: var(--panel-dark); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; }
+        h1 { color: var(--accent-green); font-size: 24px; text-transform: uppercase; letter-spacing: 2px; }
+        .config-box input { background-color: var(--bg-dark); border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 12px; border-radius: 6px; width: 280px; }
+        .main-container { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; flex: 1; }
+        @media (max-width: 1024px) { .main-container { grid-template-columns: 1fr; } }
+        .panel { background-color: var(--panel-dark); border-radius: 12px; border: 1px solid var(--border-color); padding: 20px; display: flex; flex-direction: column; }
+        .panel-title { font-size: 16px; text-transform: uppercase; margin-bottom: 15px; color: var(--accent-blue); font-weight: bold; }
+        textarea { width: 100%; flex: 1; min-height: 400px; background-color: var(--bg-dark); border: 1px solid var(--border-color); color: var(--text-main); padding: 15px; border-radius: 8px; font-family: monospace; font-size: 14px; resize: none; }
+        .action-bar { margin-top: 15px; display: flex; justify-content: space-between; align-items: center; }
+        button { background: linear-gradient(135deg, #00ff66 0%, #00b347 100%); color: #000; border: none; padding: 14px 28px; font-size: 16px; font-weight: bold; text-transform: uppercase; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 255, 102, 0.3); }
+        button:disabled { background: #202b47; color: #556688; cursor: not-allowed; box-shadow: none; }
+        .output-box { width: 100%; flex: 1; background-color: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; overflow-y: auto; font-size: 14px; line-height: 1.6; min-height: 400px; white-space: pre-wrap; }
+        .output-box table { width: 100%; border-collapse: collapse; margin: 15px 0; background-color: var(--panel-dark); }
+        .output-box th { background-color: var(--border-color); color: var(--accent-blue); padding: 10px; text-align: left; }
+        .output-box td { padding: 10px; border-bottom: 1px solid var(--border-color); }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>THE DOG MATRIX <span>// AI PREDICTOR</span></h1>
+        <h1>THE DOG MATRIX</h1>
         <div class="config-box">
-            <label for="apiKey" style="font-size: 12px; color: var(--text-muted); text-transform: uppercase;">Gemini API Key:</label>
             <input type="password" id="apiKey" placeholder="Incolla la tua API Key di Google Gemini..." />
         </div>
     </header>
 
     <div class="main-container">
         <div class="panel">
-            <div class="panel-title">
-                <span>Dati Grezzi Racing Post / Predictor</span>
-                <span style="color: var(--text-muted); font-size: 12px;">Copia e incolla l'intero blocco della corsa</span>
-            </div>
+            <div class="panel-title">Dati Grezzi Racing Post</div>
             <textarea id="rawInput" placeholder="Incolla qui i dati della corsa..."></textarea>
             <div class="action-bar">
-                <div id="statusOutput" class="status-message">Pronto per l'elaborazione tattica.</div>
-                <button id="analyzeBtn" onclick="runAnalysis()">Elabora Pronostico</button>
+                <div id="statusOutput" style="color: var(--text-muted);">Pronto.</div>
+                <button id="analyzeBtn">Elabora Pronostico</button>
             </div>
         </div>
 
         <div class="panel">
-            <div class="panel-title">
-                <span>Analisi Cinica e Verdetto Operativo</span>
-                <span style="color: var(--accent-green); font-size: 12px;">Output in tempo reale</span>
-            </div>
-            <div id="aiOutput" class="output-box">Inserisci i dati a sinistra, inserisci la tua API Key in alto e clicca su "ELABORA PRONOSTICO".</div>
+            <div class="panel-title">Verdetto Operativo</div>
+            <div id="aiOutput" class="output-box">Inserisci la chiave in alto, i dati a sinistra e clicca sul tasto verde.</div>
         </div>
     </div>
 
     <script>
         const apiKeyInput = document.getElementById('apiKey');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const rawInput = document.getElementById('rawInput');
+        const statusOutput = document.getElementById('statusOutput');
+        const aiOutput = document.getElementById('aiOutput');
+
         if (localStorage.getItem('gemini_api_key')) {
             apiKeyInput.value = localStorage.getItem('gemini_api_key');
         }
@@ -277,73 +73,57 @@
             localStorage.setItem('gemini_api_key', apiKeyInput.value);
         });
 
-        async function runAnalysis() {
+        analyzeBtn.addEventListener('click', async function() {
             const apiKey = apiKeyInput.value.trim();
-            const rawData = document.getElementById('rawInput').value.trim();
-            const statusOutput = document.getElementById('statusOutput');
-            const aiOutput = document.getElementById('aiOutput');
-            const analyzeBtn = document.getElementById('analyzeBtn');
+            const rawData = rawInput.value.trim();
 
             if (!apiKey) {
-                alert('Inserisci la tua Gemini API Key in alto a destra!');
+                alert('Manca la chiave API in alto a destra!');
                 return;
             }
-
             if (!rawData) {
-                alert('Il campo dati di Racing Post è vuoto!');
+                alert('Incolla i dati della corsa nel box di sinistra!');
                 return;
             }
 
             analyzeBtn.disabled = true;
-            statusOutput.innerHTML = '<span class="status-loading">Calcolo geometrie di lancio...</span>';
-            aiOutput.textContent = "Analisi degli split e delle traiettorie in corso...";
+            statusOutput.textContent = 'Calcolo in corso...';
+            aiOutput.textContent = 'L\'intelligenza artificiale sta elaborando i dati di Racing Post. Attendi...';
 
-            const systemPrompt = `Sei un analista professionista cinico e spietato di corse di levrieri (greyhounds), esperto di piste UK. Il tuo stile editoriale prende ispirazione dai grandi autori di noir nordici come Jo Nesbo.
-            
-Il tuo unico obiettivo è estrarre dalle card i dettagli balistici per determinare quale cane finirà nelle prime 2 posizioni ("Filtro Top 2"). Nelle conversazioni e nell'output vai sempre a capo ma NON lasciare mai righe vuote.
-
-Analizza i dati della corsa forniti dall'utente e genera un report strutturato ESATTAMENTE con questi blocchi HTML puliti (usa intestazioni <h3> o <h2>, paragrafi, liste e tabelle):
-1. Un'introduzione gasante ed energica sullo stile noir nordico sul circuito e sulla categoria.
-2. Un'analisi chirurgica di ogni singola Trap analizzando lo Split iniziale, il Best Recent Time (BRT), la forma e la traiettoria attesa.
-3. Una tabella riassuntiva dei pronostici in formato HTML (usa i tag <table>, <tr>, <th>, <td>) contenente le colonne: Trap, Levriero, Punteggio Lancio, % Probabilità nei primi 2, Valutazione Tattica.
-4. Un verdetto secco finale per la cassa che indica chiaramente la giocata sul mercato "Top 2" e l'accoppiata della morte consigliata.
-
-Ecco i dati della corsa da elaborare:
-${rawData}`;
+            const promptTesto = "Sei un analista esperto di corse di levrieri UK. Usa uno stile crudo, energico e analitico. Analizza la geometria delle traiettorie, gli split time e i declassamenti. Mostra una tabella HTML con le colonne Trap, Levriero, Punteggio Lancio, % Probabilità Top 2 e infine dai un verdetto finale con la giocata consigliata e l'accoppiata. Ecco la corsa:\n" + rawData;
 
             try {
-                // Endpoint definitivo v1 di produzione per evitare i conflitti dei vecchi moduli browser
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+                const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + apiKey;
+                const response = await fetch(url, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        contents: [{
-                            parts: [{ text: systemPrompt }]
-                        }]
+                        contents: [{ parts: [{ text: promptTesto }] }]
                     })
                 });
 
                 const data = await response.json();
 
                 if (data.candidates && data.candidates[0].content.parts[0].text) {
-                    let aiText = data.candidates[0].content.parts[0].text;
-                    aiText = aiText.replace(/```html/g, '').replace(/```/g, '');
-                    aiOutput.innerHTML = aiText;
-                    statusOutput.textContent = 'Analisi completata! Cassa pronta.';
+                    let risultato = data.candidates[0].content.parts[0].text;
+                    risultato = risultato.replace(/```html/g, '').replace(/```/g, '');
+                    aiOutput.innerHTML = risultato;
+                    statusOutput.textContent = 'Completato!';
+                } else if (data.error) {
+                    aiOutput.textContent = 'Errore da Google: ' + data.error.message;
+                    statusOutput.textContent = 'Errore.';
                 } else {
-                    throw new Error(data.error?.message || 'Risposta del modello non valida.');
+                    aiOutput.textContent = 'Risposta non chiara dal server. Controlla i dati immessi.';
+                    statusOutput.textContent = 'Errore.';
                 }
-
-            } catch (error) {
-                console.error(error);
-                aiOutput.textContent = `ERRORE: ${error.message}\n\nSe l'interfaccia continua a bloccarsi, l'account potrebbe richiedere una chiave generata sotto un profilo Cloud attivo.`;
-                statusOutput.textContent = 'Errore di caricamento.';
+            } catch (err) {
+                console.error(err);
+                aiOutput.textContent = 'Errore di connessione: ' + err.message;
+                statusOutput.textContent = 'Errore.';
             } finally {
                 analyzeBtn.disabled = false;
             }
-        }
+        });
     </script>
 </body>
 </html>
