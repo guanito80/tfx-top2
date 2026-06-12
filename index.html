@@ -234,13 +234,6 @@
             100% { opacity: 0.6; }
         }
     </style>
-    <script type="importmap">
-      {
-        "imports": {
-          "@google/generative-ai": "https://esm.run/@google/generative-ai"
-        }
-      }
-    </script>
 </head>
 <body>
 
@@ -261,7 +254,7 @@
             <textarea id="rawInput" placeholder="Incolla qui i dati della corsa..."></textarea>
             <div class="action-bar">
                 <div id="statusOutput" class="status-message">Pronto per l'elaborazione tattica.</div>
-                <button id="analyzeBtn">Elabora Pronostico</button>
+                <button id="analyzeBtn" onclick="runAnalysis()">Elabora Pronostico</button>
             </div>
         </div>
 
@@ -274,12 +267,8 @@
         </div>
     </div>
 
-    <script type="module">
-        import { GoogleGenAI } from '@google/generative-ai';
-
+    <script>
         const apiKeyInput = document.getElementById('apiKey');
-        const analyzeBtn = document.getElementById('analyzeBtn');
-
         if (localStorage.getItem('gemini_api_key')) {
             apiKeyInput.value = localStorage.getItem('gemini_api_key');
         }
@@ -288,11 +277,12 @@
             localStorage.setItem('gemini_api_key', apiKeyInput.value);
         });
 
-        analyzeBtn.addEventListener('click', async () => {
+        async function runAnalysis() {
             const apiKey = apiKeyInput.value.trim();
             const rawData = document.getElementById('rawInput').value.trim();
             const statusOutput = document.getElementById('statusOutput');
             const aiOutput = document.getElementById('aiOutput');
+            const analyzeBtn = document.getElementById('analyzeBtn');
 
             if (!apiKey) {
                 alert('Inserisci la tua Gemini API Key in alto a destra!');
@@ -306,9 +296,9 @@
 
             analyzeBtn.disabled = true;
             statusOutput.innerHTML = '<span class="status-loading">Calcolo geometrie di lancio...</span>';
-            aiOutput.textContent = "Inizializzazione SDK e analisi delle traiettorie in corso...";
+            aiOutput.textContent = "Analisi degli split e delle traiettorie in corso...";
 
-            const systemPrompt = `Sei un analista professionista cinico e spietato di corse di levrieri (greyhounds), esperto di piste UK. Il tuo stile editoriale prende ispirazione dai grandi autori di noir nordici come Jo Nesbo. I capitoli devono avere una lunghezza tra le 2400 e le 2500 parole. Nelle conversazioni, vai a capo ma non lasciare righe vuote. Salva questa regola per tutto il romanzo.
+            const systemPrompt = `Sei un analista professionista cinico e spietato di corse di levrieri (greyhounds), esperto di piste UK. Il tuo stile editoriale prende ispirazione dai grandi autori di noir nordici come Jo Nesbo.
             
 Il tuo unico obiettivo è estrarre dalle card i dettagli balistici per determinare quale cane finirà nelle prime 2 posizioni ("Filtro Top 2"). Nelle conversazioni e nell'output vai sempre a capo ma NON lasciare mai righe vuote.
 
@@ -322,32 +312,38 @@ Ecco i dati della corsa da elaborare:
 ${rawData}`;
 
             try {
-                // Inizializzazione protetta tramite SDK Google ufficiale
-                const ai = new GoogleGenAI({ apiKey: apiKey });
-                
-                // Utilizzo del modello di punta definitivo
-                const response = await ai.models.generateContent({
-                    model: 'gemini-1.5-flash',
-                    contents: systemPrompt,
+                // Endpoint definitivo v1 di produzione per evitare i conflitti dei vecchi moduli browser
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{ text: systemPrompt }]
+                        }]
+                    })
                 });
 
-                if (response && response.text) {
-                    let aiText = response.text;
+                const data = await response.json();
+
+                if (data.candidates && data.candidates[0].content.parts[0].text) {
+                    let aiText = data.candidates[0].content.parts[0].text;
                     aiText = aiText.replace(/```html/g, '').replace(/```/g, '');
                     aiOutput.innerHTML = aiText;
                     statusOutput.textContent = 'Analisi completata! Cassa pronta.';
                 } else {
-                    throw new Error('Risposta vuota dall\'SDK Google.');
+                    throw new Error(data.error?.message || 'Risposta del modello non valida.');
                 }
 
             } catch (error) {
                 console.error(error);
-                aiOutput.textContent = `ERRORE DI RETE: ${error.message}\n\nL'SDK ufficiale ha rilevato un problema. Assicurati che il token incollato sia completo e che non ci siano blocchi ad-blocker attivi sul browser.`;
+                aiOutput.textContent = `ERRORE: ${error.message}\n\nSe l'interfaccia continua a bloccarsi, l'account potrebbe richiedere una chiave generata sotto un profilo Cloud attivo.`;
                 statusOutput.textContent = 'Errore di caricamento.';
             } finally {
                 analyzeBtn.disabled = false;
             }
-        });
+        }
     </script>
 </body>
 </html>
